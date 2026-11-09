@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>지구인 vs 외계인 : 지구를 지켜라!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060b1f;--neon:#39ff9f;--alien:#86ff4f;--danger:#ff3b5c;--earth:#3aa0ff;--gold:#ffd54a;--panel:rgba(14,22,54,.82);--line:rgba(120,170,255,.25);--txt:#eaf2ff}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:radial-gradient(ellipse at 50% 120%,#15245a 0%,#070c22 55%,#03050f 100%);color:var(--txt);font-family:'Jua',system-ui,sans-serif;min-height:100vh;overflow-x:hidden;user-select:none;-webkit-user-select:none}
+input,textarea{user-select:text;-webkit-user-select:text}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%}
+#topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;padding:8px 14px;background:rgba(3,6,20,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.logo{font-family:'Black Han Sans';font-size:19px;color:var(--neon);white-space:nowrap;text-shadow:0 0 12px rgba(57,255,159,.6)}
+#steps{display:flex;gap:4px;flex:1;overflow-x:auto;scrollbar-width:none}
+#steps::-webkit-scrollbar{display:none}
+.step{font-family:'Jua';font-size:13.5px;padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.06);color:#8fa2cf;border:1px solid transparent;cursor:pointer;white-space:nowrap}
+.step.done{color:#bfffe0;background:rgba(57,255,159,.13)}
+.step.cur{color:#03150c;background:var(--neon);box-shadow:0 0 14px rgba(57,255,159,.6)}
+.tbtn{font-family:'Jua';font-size:13px;background:rgba(255,255,255,.08);color:#cfe0ff;border:1px solid var(--line);border-radius:10px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+.tbtn.off{opacity:.45;text-decoration:line-through}
+main{position:relative;z-index:1}
+.screen{display:none;min-height:calc(100vh - 50px);padding:18px;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.screen.active{display:flex;animation:fadeIn .6s}
+@keyframes fadeIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+.btn{font-family:'Jua';font-size:22px;padding:13px 30px;border-radius:16px;border:none;cursor:pointer;background:linear-gradient(180deg,#5affb8,#14c97a);color:#032617;box-shadow:0 6px 0 #0b7a4a,0 0 26px rgba(57,255,159,.35);transition:transform .08s,filter .2s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #0b7a4a}
+.btn:disabled{filter:grayscale(1) brightness(.6);cursor:not-allowed}
+.btn.red{background:linear-gradient(180deg,#ff7a8e,#e0213f);color:#fff;box-shadow:0 6px 0 #8a0f22,0 0 26px rgba(255,59,92,.4)}
+.btn.blue{background:linear-gradient(180deg,#7cc4ff,#2b7fe0);color:#fff;box-shadow:0 6px 0 #154a8c,0 0 26px rgba(58,160,255,.4)}
+.btn.gold{background:linear-gradient(180deg,#ffe58a,#f2b705);color:#3a2700;box-shadow:0 6px 0 #9a7300,0 0 26px rgba(255,213,74,.45)}
+.btn.ghost{background:rgba(255,255,255,.05);color:#d6e4ff;border:2px solid var(--line);box-shadow:none}
+.btn.sm{font-size:16px;padding:8px 16px;border-radius:12px;box-shadow:0 4px 0 #0b7a4a}
+.btn.ghost.sm{box-shadow:none}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.45)}
+.hide{display:none!important}
+.row{display:flex;gap:12px;align-items:center}
+.ttl{font-family:'Black Han Sans';letter-spacing:1px}
+#toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:rgba(5,10,30,.92);border:1px solid var(--neon);padding:10px 20px;border-radius:14px;font-size:20px;animation:toastIn .3s, toastOut .4s 2.3s forwards;box-shadow:0 0 20px rgba(57,255,159,.3)}
+.toast.bad{border-color:var(--danger);box-shadow:0 0 20px rgba(255,59,92,.4)}
+@keyframes toastIn{from{opacity:0;transform:translateY(-10px)}}
+@keyframes toastOut{to{opacity:0;transform:translateY(-10px)}}
+
+/* ===== shared svgs ===== */
+.continents{animation:earthspin 24s linear infinite}
+@keyframes earthspin{from{transform:translateX(0)}to{transform:translateX(-200px)}}
+.ufo-light{animation:blink 1s infinite}
+.ufo-light:nth-child(2n){animation-delay:.5s}
+@keyframes blink{50%{opacity:.25}}
+.beam{animation:beam 1.6s ease-in-out infinite;transform-origin:150px 95px}
+@keyframes beam{50%{opacity:.35}}
+.mouth{transform-box:fill-box;transform-origin:center}
+.talking .mouth{animation:talk .18s infinite alternate}
+@keyframes talk{to{transform:scaleY(2.2)}}
+.eye-glow{animation:eyeg 2s infinite}
+@keyframes eyeg{50%{opacity:.4}}
+
+/* ===== title ===== */
+#title .wrap{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+#title .hero{position:relative;width:min(420px,70vw);height:min(330px,52vw)}
+#title .hero .earth{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:68%}
+#title .hero .ufo{position:absolute;width:44%;left:56%;top:0;animation:hover 3s ease-in-out infinite}
+@keyframes hover{50%{transform:translateY(14px) rotate(-3deg)}}
+.vs{font-family:'Black Han Sans';font-size:clamp(40px,7vw,86px);line-height:1;background:linear-gradient(180deg,#fff,#9fe6ff 50%,#3aa0ff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 18px rgba(58,160,255,.6))}
+.vs b{background:linear-gradient(180deg,#eaff9a,#86ff4f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-size:clamp(18px,2.2vw,26px);color:#bcd4ff}
+.clsbox{display:flex;gap:10px;align-items:center;font-size:20px;background:rgba(255,255,255,.06);padding:10px 16px;border-radius:14px;border:1px solid var(--line)}
+.clsbox input{font-family:'Jua';font-size:22px;width:180px;padding:8px 12px;border-radius:10px;border:2px solid var(--line);background:#0b1438;color:#fff;text-align:center}
+
+/* ===== prologue ===== */
+#prologue{justify-content:flex-start;overflow:hidden;padding:0}
+#proStage{position:relative;width:100%;height:calc(100vh - 50px);overflow:hidden}
+#proStage .earth{position:absolute;left:50%;top:52%;width:min(46vh,46vw);transform:translate(-50%,-50%);transition:all 2.5s ease}
+#prologue[data-scene=ufo] #proStage .earth,#prologue[data-scene=tx] #proStage .earth,#prologue[data-scene=hq] #proStage .earth{top:78%;width:min(70vh,60vw)}
+#proStage .ufo{position:absolute;left:50%;top:-40%;width:min(70vw,720px);transform:translateX(-50%) scale(.3);transition:top 3s cubic-bezier(.2,.8,.3,1),transform 3s cubic-bezier(.2,.8,.3,1);filter:drop-shadow(0 0 40px rgba(134,255,79,.35))}
+#prologue[data-scene=ufo] #proStage .ufo,#prologue[data-scene=tx] #proStage .ufo,#prologue[data-scene=hq] #proStage .ufo{top:4%;transform:translateX(-50%) scale(1)}
+#redalert{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(255,0,40,.55));transition:opacity .4s}
+#prologue[data-scene=alert] #redalert,#prologue[data-scene=ufo] #redalert{opacity:1;animation:redpulse 1s infinite}
+@keyframes redpulse{50%{opacity:.35}}
+#warnBanner{position:absolute;top:18%;left:0;right:0;text-align:center;font-family:'Black Han Sans';font-size:clamp(28px,5vw,64px);color:#ff4d6a;text-shadow:0 0 20px #f00;display:none;letter-spacing:4px}
+#prologue[data-scene=alert] #warnBanner{display:block;animation:shake .2s infinite,blink .5s infinite}
+@keyframes shake{25%{transform:translate(3px,-2px)}50%{transform:translate(-3px,2px)}75%{transform:translate(2px,3px)}}
+#dlg{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);width:min(1100px,94vw);display:flex;gap:18px;align-items:stretch;padding:18px 22px;cursor:pointer;min-height:150px}
+#dlg .av{width:120px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:16px;background:rgba(0,0,0,.25);font-size:64px}
+#dlg .av svg{width:110px}
+#dlg .who{font-family:'Black Han Sans';font-size:22px;margin-bottom:6px}
+#dlg .txt{font-size:clamp(22px,2.4vw,32px);line-height:1.45;min-height:2.9em}
+#dlg .nxt{position:absolute;right:18px;bottom:12px;font-size:16px;color:#9fb6e8;animation:blink 1s infinite}
+#dlg.alien{border-color:rgba(134,255,79,.7);box-shadow:0 0 30px rgba(134,255,79,.35),inset 0 0 40px rgba(134,255,79,.08);background:rgba(6,22,10,.88)}
+#dlg.alien .who{color:var(--alien)}
+#dlg.alien .txt{color:#e6ffd9;text-shadow:0 0 6px rgba(134,255,79,.5)}
+#dlg.alien::before{content:'';position:absolute;inset:0;border-radius:20px;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(134,255,79,.06) 0 2px,transparent 2px 5px);animation:scan 4s linear infinite}
+@keyframes scan{to{background-position:0 200px}}
+#dlg.sys{border-color:rgba(255,59,92,.8);background:rgba(40,4,12,.88)}
+#dlg.sys .who{color:#ff7088}
+#dlg.hq{border-color:rgba(58,160,255,.8);background:rgba(6,18,46,.9)}
+#dlg.hq .who{color:#7cc4ff}
+#dlg.narr .av{display:none}
+#dlg.narr .who{color:#bcd4ff}
+#proGo{position:absolute;right:4%;bottom:calc(4% + 175px)}
+#txFrame{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);width:min(360px,40vw);aspect-ratio:1/1;border-radius:24px;border:3px solid rgba(134,255,79,.8);background:radial-gradient(circle,#0c3a16,#031208);box-shadow:0 0 50px rgba(134,255,79,.45);display:none;overflow:hidden}
+#txFrame svg{width:100%;height:100%}
+#txFrame::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.25) 0 2px,transparent 2px 4px);pointer-events:none}
+#txFrame .rec{position:absolute;top:10px;left:14px;color:#ff5b5b;font-size:16px;z-index:2;animation:blink 1s infinite}
+#prologue[data-scene=tx] #txFrame{display:block;animation:glitchIn .6s}
+@keyframes glitchIn{0%{opacity:0;transform:translate(-50%,-50%) scaleY(.02)}50%{opacity:1;transform:translate(-50%,-50%) scaleY(.02)}100%{transform:translate(-50%,-50%) scaleY(1)}}
+
+/* ===== study / video ===== */
+#study .wrap{width:min(1180px,96vw);display:flex;flex-direction:column;gap:12px;align-items:center}
+#countdown{font-family:'Black Han Sans';font-size:clamp(26px,3.6vw,44px);color:#fff;background:rgba(255,59,92,.18);border:2px solid var(--danger);padding:6px 26px;border-radius:999px;text-shadow:0 0 12px #ff3b5c}
+#countdown.hurry{animation:redpulse .5s infinite;background:rgba(255,59,92,.45)}
+#player{width:100%;aspect-ratio:16/9;max-height:calc(100vh - 230px);background:#000;border-radius:18px;overflow:hidden;position:relative;border:1px solid #223;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+#vStage{position:absolute;inset:0 0 54px 0;overflow:hidden;background:linear-gradient(160deg,#0f3d2e,#0b2240 60%,#1a1040)}
+#vTop{position:absolute;top:0;left:0;right:0;padding:10px 16px;display:flex;justify-content:space-between;font-size:16px;color:#dfe;background:linear-gradient(180deg,rgba(0,0,0,.6),transparent);z-index:5}
+#vCap{position:absolute;left:50%;bottom:66px;transform:translateX(-50%);max-width:88%;background:rgba(0,0,0,.72);padding:8px 18px;border-radius:10px;font-size:clamp(17px,2vw,26px);text-align:center;z-index:5;line-height:1.4}
+#vBar{position:absolute;left:0;right:0;bottom:0;height:54px;background:#0c0c12;display:flex;align-items:center;gap:12px;padding:0 14px;z-index:6}
+#vBar button{background:none;border:none;color:#fff;font-size:24px;cursor:pointer;width:36px}
+#vProg{flex:1;height:6px;background:#333;border-radius:3px;position:relative;cursor:pointer}
+#vProg i{position:absolute;left:0;top:0;bottom:0;background:#ff2d55;border-radius:3px;width:0}
+#vProg .chap{position:absolute;top:-3px;width:2px;height:12px;background:#000}
+#vTime{font-size:14px;color:#ccd;min-width:96px;text-align:right}
+.sc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2vh}
+.sc h2{font-family:'Black Han Sans';font-size:clamp(30px,4.6vw,64px);margin:0;text-shadow:0 4px 0 rgba(0,0,0,.35)}
+.sc .tag{font-size:clamp(16px,1.8vw,24px);background:#ff2d55;color:#fff;padding:4px 14px;border-radius:999px}
+.pop{animation:pop .6s both}
+@keyframes pop{0%{opacity:0;transform:scale(.3)}70%{transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}
+.emo{font-size:clamp(70px,11vw,150px);line-height:1;display:inline-block}
+.pour{animation:pour 3s ease-in-out infinite;transform-origin:50% 70%}
+@keyframes pour{0%,10%{transform:rotate(0)}40%,80%{transform:rotate(125deg)}100%{transform:rotate(0)}}
+.dropz{position:relative;height:90px;width:120px}
+.dropz span{position:absolute;font-size:36px;left:50%;top:0;opacity:0;animation:drop 3s infinite}
+.dropz span:nth-child(2){animation-delay:.25s;left:35%}
+.dropz span:nth-child(3){animation-delay:.5s;left:62%}
+@keyframes drop{0%,38%{opacity:0;transform:translateY(-20px)}45%{opacity:1}80%{opacity:1;transform:translateY(70px)}90%,100%{opacity:0;transform:translateY(80px)}}
+.stream{width:22px;height:130px;background:linear-gradient(180deg,rgba(140,210,255,.9),rgba(140,210,255,.2));border-radius:10px;animation:stream .4s linear infinite;margin-top:-20px}
+@keyframes stream{50%{filter:brightness(1.4);transform:scaleX(.8)}}
+.wiggle{animation:wiggle .5s ease-in-out infinite}
+@keyframes wiggle{25%{transform:rotate(-10deg)}75%{transform:rotate(10deg)}}
+.bottlebox{position:relative;display:inline-block}
+.lbl{position:absolute;left:12%;right:12%;top:46%;height:22%;background:#ff8a3d;border-radius:6px;font-size:clamp(12px,1.4vw,20px);display:flex;align-items:center;justify-content:center;color:#fff;animation:peel 4s infinite}
+@keyframes peel{0%,25%{transform:none;opacity:1}55%{transform:translate(130%,-40%) rotate(35deg);opacity:1}70%,100%{transform:translate(180%,-60%) rotate(60deg);opacity:0}}
+.squish{animation:squish 4s infinite}
+@keyframes squish{0%,65%{transform:none}80%,95%{transform:scale(.55,.8) rotate(-8deg)}100%{transform:none}}
+.bins3{display:flex;gap:3vw;align-items:flex-end}
+.bin3{width:clamp(90px,12vw,170px);height:clamp(100px,14vw,190px);border-radius:10px 10px 16px 16px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:10px;font-size:clamp(16px,1.8vw,24px);position:relative}
+.bin3 .it{position:absolute;top:-120%;font-size:clamp(40px,5vw,70px);animation:fallin 3.6s infinite;opacity:0}
+@keyframes fallin{0%{top:-120%;opacity:0}15%{opacity:1}45%{top:30%;opacity:1}55%,100%{top:40%;opacity:0}}
+.cards{display:flex;gap:2vw;flex-wrap:wrap;justify-content:center;padding:0 3vw}
+.vcard{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);border-radius:18px;padding:1.6vh 1.6vw;width:clamp(200px,26vw,360px);text-align:left;font-size:clamp(14px,1.55vw,21px);line-height:1.45}
+.vcard h3{margin:0 0 6px;font-family:'Black Han Sans';font-size:clamp(20px,2.3vw,32px);display:flex;align-items:center;gap:8px}
+.vcard b{color:#ffd54a}
+.chk{font-size:clamp(22px,3vw,40px);display:flex;gap:1.4vw;align-items:center;flex-wrap:wrap;justify-content:center}
+.chk span{background:rgba(255,255,255,.12);padding:.6vh 1.2vw;border-radius:14px}
+.chk em{font-style:normal;color:#39ff9f}
+
+/* ===== exam ===== */
+#exam .wrap{width:min(1180px,96vw);display:grid;grid-template-columns:1fr 250px;gap:16px}
+.paper{background:#fbfaf4;color:#1b1b1b;border-radius:6px;padding:26px 34px 30px;box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;min-height:560px;font-family:'Jua'}
+.paper .phead{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px double #222;padding-bottom:8px;margin-bottom:16px}
+.paper .phead .t1{font-size:15px;color:#555}
+.paper .phead .t2{font-family:'Black Han Sans';font-size:36px;letter-spacing:6px}
+.paper .phead .t3{font-size:15px;color:#555;text-align:right}
+.qnum{font-family:'Black Han Sans';font-size:24px;color:#333}
+.qtext{font-size:clamp(22px,2.3vw,30px);line-height:1.5;margin:6px 0 16px}
+.qtext u{text-decoration-thickness:2px}
+.qbox{border:2px solid #333;border-radius:14px;padding:14px 18px;margin:0 auto 18px;max-width:600px;text-align:center;font-size:clamp(20px,2.1vw,27px);line-height:1.6}
+.qbox .blank{display:inline-block;min-width:120px;border-bottom:2px solid #333}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choice{font-family:'Jua';text-align:left;font-size:clamp(19px,1.9vw,25px);padding:14px 18px;border-radius:12px;border:2px solid #cfcab8;background:#fff;cursor:pointer;color:#222;transition:all .12s;display:flex;gap:10px;align-items:center}
+.choice:hover{border-color:#2b7fe0;background:#f2f8ff}
+.choice.sel{border-color:#1d5fd0;background:#dcebff;box-shadow:0 0 0 3px rgba(43,127,224,.25)}
+.choice .no{font-size:1.15em}
+.pnav{display:flex;justify-content:space-between;margin-top:22px}
+.omr{padding:16px;display:flex;flex-direction:column;gap:10px}
+.omr h4{margin:0;font-family:'Black Han Sans';font-size:20px;text-align:center}
+.omr .tm{font-family:'Black Han Sans';font-size:30px;text-align:center;color:#ffd54a}
+.omr .tm.hurry{color:#ff5370;animation:blink .5s infinite}
+.omr .grid{display:flex;flex-direction:column;gap:5px}
+.omr .r{display:flex;align-items:center;gap:6px;cursor:pointer;padding:2px 4px;border-radius:6px}
+.omr .r.cur{background:rgba(57,255,159,.15)}
+.omr .r b{width:24px;text-align:right;font-size:15px}
+.omr .r i{width:24px;height:24px;border-radius:50%;border:2px solid #556;font-style:normal;font-size:12px;display:flex;align-items:center;justify-content:center;color:#889}
+.omr .r i.on{background:#e8eefc;border-color:#e8eefc;color:#111}
+.mark{position:absolute;pointer-events:none;font-family:'Black Han Sans';color:#e01b2f}
+#gradeView .paper{min-height:auto}
+.glist{display:grid;grid-template-columns:1fr 1fr;gap:8px 26px}
+.gitem{position:relative;padding:10px 14px 10px 54px;border-bottom:1px dashed #ccc;font-size:18px;line-height:1.4}
+.gitem .gm{position:absolute;left:4px;top:2px;font-size:40px;color:#e01b2f;opacity:0;transform:scale(2.5);transition:all .25s;font-family:'Black Han Sans'}
+.gitem.shown .gm{opacity:1;transform:scale(1)}
+.gitem .ex{color:#555;font-size:15px;margin-top:4px;display:none}
+.gitem.wrong.shown .ex{display:block}
+.gitem.wrong .ex b{color:#c0142a}
+.scoreBig{font-family:'Black Han Sans';font-size:80px;color:#e01b2f;text-align:center;line-height:1}
+.stamp{position:absolute;right:60px;top:150px;font-family:'Black Han Sans';font-size:46px;border:6px solid currentColor;border-radius:14px;padding:6px 18px;transform:rotate(-14deg) scale(3);opacity:0;transition:all .35s cubic-bezier(.3,1.6,.6,1)}
+.stamp.on{transform:rotate(-14deg) scale(1);opacity:.88}
+.stamp.pass{color:#d4142c}
+.stamp.fail{color:#555}
+.alienSay{display:flex;gap:14px;align-items:center;margin-top:14px;background:rgba(6,22,10,.9);border:2px solid rgba(134,255,79,.6);border-radius:16px;padding:12px 16px;color:#e6ffd9;font-size:21px}
+.alienSay svg{width:70px;flex:none}
+
+/* ===== sort game ===== */
+#sort{justify-content:flex-start;padding-top:10px}
+#sort .wrap{width:min(1280px,98vw);display:flex;flex-direction:column;gap:10px}
+.hud{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.hud .chip{background:rgba(255,255,255,.07);border:1px solid var(--line);padding:6px 14px;border-radius:12px;font-size:19px}
+.hpbar{flex:1;min-width:200px;height:24px;background:#1b2240;border-radius:12px;overflow:hidden;position:relative;border:1px solid var(--line)}
+.hpbar i{position:absolute;inset:0;width:100%;background:linear-gradient(90deg,#39ff9f,#3aa0ff);transition:width .4s}
+.hpbar span{position:absolute;inset:0;text-align:center;font-size:15px;line-height:24px;color:#fff;text-shadow:0 1px 2px #000}
+.bench{display:grid;grid-template-columns:200px 1fr 260px;gap:12px;align-items:stretch}
+.conveyor{padding:10px;display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.conveyor h4{margin:0 0 4px;font-size:16px;color:#9fb6e8;text-align:center}
+.qitem{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border-radius:10px;padding:6px 8px;font-size:15px;color:#cdd8f5}
+.qitem .e{font-size:26px}
+.qitem:first-of-type{border:1px dashed var(--neon)}
+.work{padding:14px;display:flex;gap:16px;align-items:center;position:relative;min-height:230px}
+.curItem{width:170px;height:170px;flex:none;border-radius:24px;background:radial-gradient(circle at 40% 30%,#2c3d78,#141d42);border:3px solid #4a62b0;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;position:relative;transition:transform .2s}
+.curItem:active{cursor:grabbing}
+.curItem .e{font-size:100px;line-height:1;transition:transform .3s,filter .3s}
+.curItem.crushed .e{transform:scale(.62,.82) rotate(-12deg)}
+.curItem.wrapped::after{content:'📰';position:absolute;font-size:120px;opacity:.85}
+.curItem.sparkle::before{content:'✨';position:absolute;top:-6px;right:-6px;font-size:40px;animation:pop .5s}
+.curItem.enter{animation:slideIn .45s}
+@keyframes slideIn{from{transform:translateX(-160px) rotate(-20deg);opacity:0}}
+.curItem.fly{animation:none}
+.itemInfo{flex:1;display:flex;flex-direction:column;gap:8px}
+.itemInfo .nm{font-family:'Black Han Sans';font-size:clamp(26px,2.8vw,38px)}
+.itemInfo .st{font-size:clamp(18px,1.8vw,23px);line-height:1.5;color:#ffe08a}
+.itemInfo .st .okl{color:#7dffbf}
+.itemInfo .done{display:flex;gap:6px;flex-wrap:wrap}
+.itemInfo .done span{font-size:14px;background:rgba(57,255,159,.15);color:#9fffd0;padding:2px 10px;border-radius:999px}
+.ibar{height:12px;background:#1b2240;border-radius:6px;overflow:hidden}
+.ibar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff3b5c,#ffd54a,#39ff9f);transition:width .1s linear}
+.tools{padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}
+.tools h4{grid-column:1/-1;margin:0;font-size:16px;color:#9fb6e8;text-align:center}
+.tool{font-family:'Jua';font-size:18px;padding:12px 6px;border-radius:14px;border:2px solid #3b4f92;background:#18234d;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tool .ic{font-size:30px}
+.tool:hover{border-color:var(--neon)}
+.tool:active{transform:scale(.95)}
+.tool.wide{grid-column:1/-1;flex-direction:row;justify-content:center;gap:8px}
+.bins{display:grid;grid-template-columns:repeat(9,1fr);gap:8px}
+.bin{position:relative;border-radius:10px 10px 18px 18px;padding:34px 4px 10px;text-align:center;cursor:pointer;min-height:min(170px,20vh);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:transform .15s,box-shadow .15s;border:3px solid rgba(0,0,0,.25);color:#1a1a1a}
+.bin .lid{position:absolute;left:-4px;right:-4px;top:-6px;height:22px;border-radius:10px;background:inherit;filter:brightness(.8);transform-origin:10% 100%;transition:transform .25s;border:3px solid rgba(0,0,0,.25)}
+.bin .bi{font-size:44px}
+.bin .bn{font-size:clamp(14px,1.35vw,19px);line-height:1.15;font-weight:bold;white-space:pre-line}
+.bin.hot{transform:translateY(-8px) scale(1.05);box-shadow:0 0 0 4px #fff,0 0 30px rgba(255,255,255,.6)}
+.bin.hot .lid,.bin.open .lid{transform:rotate(-28deg) translateY(-6px)}
+.bin.okflash{animation:okf .6s}
+.bin.badflash{animation:badf .6s}
+@keyframes okf{50%{box-shadow:0 0 0 6px #39ff9f,0 0 40px #39ff9f}}
+@keyframes badf{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}50%{box-shadow:0 0 0 6px #ff3b5c}}
+.dragGhost{position:fixed;z-index:300;pointer-events:none;font-size:90px;transform:translate(-50%,-50%) rotate(-8deg);filter:drop-shadow(0 10px 10px rgba(0,0,0,.5))}
+.fb{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:rgba(3,6,20,.55);border-radius:20px}
+.fbBox{background:#0d1638;border:3px solid var(--neon);border-radius:20px;padding:18px 26px;max-width:640px;text-align:center;font-size:22px;line-height:1.5;animation:pop .35s}
+.fbBox.bad{border-color:var(--danger)}
+.fbBox .big{font-family:'Black Han Sans';font-size:40px}
+.taunt{position:absolute;right:16px;top:-6px;background:#103a10;border:2px solid var(--alien);color:#dfffd0;padding:6px 14px;border-radius:16px 16px 4px 16px;font-size:18px;z-index:25;animation:pop .3s}
+.overlay{position:fixed;inset:0;z-index:150;background:rgba(2,4,14,.82);display:flex;align-items:center;justify-content:center;padding:20px}
+.ovBox{max-width:780px;width:100%;text-align:center;padding:30px;display:flex;flex-direction:column;gap:16px;align-items:center}
+.ovBox h2{font-family:'Black Han Sans';font-size:clamp(34px,4.5vw,56px);margin:0}
+.ovBox p{font-size:22px;line-height:1.55;margin:0;color:#cfe0ff}
+
+/* ===== discuss ===== */
+#discuss .wrap{width:min(1280px,98vw);display:grid;grid-template-columns:1.25fr 1fr;gap:14px;height:calc(100vh - 90px);min-height:560px}
+.chat{display:flex;flex-direction:column;overflow:hidden}
+.chatHead{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.chatHead .avs{display:flex}
+.chatHead .avs span{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid #0d1638;margin-left:-8px}
+.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg{display:flex;gap:10px;align-items:flex-start;max-width:88%;animation:pop .3s}
+.msg .a{width:44px;height:44px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:24px}
+.msg .b{background:rgba(255,255,255,.08);padding:10px 14px;border-radius:4px 16px 16px 16px;font-size:20px;line-height:1.45}
+.msg .n{font-size:14px;color:#9fb6e8;margin-bottom:2px}
+.msg.me{align-self:flex-end;flex-direction:row-reverse}
+.msg.me .b{background:#2b7fe0;border-radius:16px 4px 16px 16px}
+.msg .addc{margin-top:6px;font-family:'Jua';font-size:15px;background:#ffd54a;color:#3a2700;border:none;border-radius:999px;padding:4px 12px;cursor:pointer}
+.typing{font-size:16px;color:#9fb6e8;padding:0 16px 6px}
+.chatIn{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+.chatIn input{flex:1;font-family:'Jua';font-size:21px;padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:#0b1438;color:#fff}
+.quick{display:flex;gap:6px;padding:0 12px 10px;flex-wrap:wrap}
+.quick button{font-family:'Jua';font-size:14px;background:rgba(255,255,255,.07);border:1px solid var(--line);color:#cfe0ff;border-radius:999px;padding:4px 12px;cursor:pointer}
+.board{display:flex;flex-direction:column;overflow:hidden}
+.board h3{margin:0;padding:12px 16px;font-family:'Black Han Sans';font-size:22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.cats{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.cat{border-radius:14px;border:2px solid;overflow:hidden}
+.cat .ch{padding:6px 12px;font-size:19px;display:flex;justify-content:space-between}
+.cat ul{list-style:none;margin:0;padding:8px;display:flex;flex-wrap:wrap;gap:6px;min-height:46px}
+.cat li{background:#fff;color:#222;border-radius:10px;padding:6px 10px;font-size:18px;display:flex;align-items:center;gap:6px;animation:pop .35s}
+.cat li button{border:none;background:#eee;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:12px;color:#888}
+.cat.c0{border-color:#ff9b6a}.cat.c0 .ch{background:#ff9b6a33}
+.cat.c1{border-color:#6ad1ff}.cat.c1 .ch{background:#6ad1ff33}
+.cat.c2{border-color:#8dff6a}.cat.c2 .ch{background:#8dff6a33}
+.manual{display:flex;gap:6px;padding:10px 12px;border-top:1px solid var(--line)}
+.manual input{flex:1;font-family:'Jua';font-size:17px;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:#0b1438;color:#fff;min-width:0}
+.manual select{font-family:'Jua';font-size:16px;border-radius:10px;background:#0b1438;color:#fff;border:2px solid var(--line)}
+.boardFoot{padding:12px;display:flex;gap:8px;justify-content:space-between;align-items:center;border-top:1px solid var(--line)}
+
+/* ===== alkkagi ===== */
+#alkkagi .wrap{display:flex;gap:16px;align-items:flex-start;justify-content:center;width:100%}
+#alkCv{width:min(calc(100vh - 90px),62vw);height:auto;aspect-ratio:1/1;border-radius:14px;touch-action:none;box-shadow:0 20px 60px rgba(0,0,0,.6);cursor:crosshair}
+.side{width:300px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.turn{font-family:'Black Han Sans';font-size:28px;text-align:center;padding:10px;border-radius:14px}
+.turn.earth{background:rgba(58,160,255,.2);color:#9fd2ff;border:2px solid #3aa0ff}
+.turn.alien{background:rgba(134,255,79,.15);color:#c4ff9f;border:2px solid #86ff4f}
+.sideList{font-size:16px;line-height:1.6;max-height:180px;overflow-y:auto;background:rgba(0,0,0,.2);border-radius:10px;padding:8px 10px}
+.sideList .x{text-decoration:line-through;opacity:.4}
+.seg{display:flex;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.seg button{flex:1;font-family:'Jua';font-size:15px;padding:8px;background:transparent;color:#cfe0ff;border:none;cursor:pointer}
+.seg button.on{background:var(--neon);color:#032617}
+.howto{font-size:15px;color:#a9bbe6;line-height:1.5}
+
+/* ===== signs ===== */
+#signs .wrap{width:min(1240px,98vw);display:grid;grid-template-columns:1fr 1.1fr;gap:16px}
+.editor{padding:18px;display:flex;flex-direction:column;gap:12px}
+.editor label{font-size:18px;color:#bcd4ff}
+.editor input{font-family:'Jua';font-size:24px;padding:10px 14px;border-radius:12px;border:2px solid var(--line);background:#0b1438;color:#fff;width:100%}
+.swatches,.stickers{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:42px;height:42px;border-radius:10px;border:3px solid transparent;cursor:pointer}
+.sw.on{border-color:#fff;box-shadow:0 0 0 2px #000}
+.stk{font-size:28px;width:48px;height:48px;border-radius:10px;border:2px solid var(--line);background:rgba(255,255,255,.05);cursor:pointer}
+.stk.on{border-color:var(--neon);background:rgba(57,255,159,.2)}
+.ideas{display:flex;flex-wrap:wrap;gap:6px}
+.ideas button{font-family:'Jua';font-size:15px;background:rgba(255,213,74,.15);color:#ffe08a;border:1px solid rgba(255,213,74,.4);border-radius:999px;padding:4px 12px;cursor:pointer}
+.signPrev{display:flex;flex-direction:column;align-items:center;margin:6px auto}
+.signBoard{width:340px;min-height:170px;border-radius:12px;border:6px solid #fff;box-shadow:0 10px 30px rgba(0,0,0,.5);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;font-family:'Black Han Sans';font-size:34px;line-height:1.2;color:#111;word-break:keep-all;transform:rotate(-2deg)}
+.signBoard .st{font-size:44px}
+.signBoard .by{font-family:'Jua';font-size:16px;opacity:.7;margin-top:6px}
+.stick{width:16px;height:120px;background:linear-gradient(90deg,#b07a3c,#8a5a26);border-radius:0 0 6px 6px}
+.signList{padding:16px;display:flex;flex-direction:column;gap:10px}
+.signGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;overflow-y:auto;max-height:calc(100vh - 260px)}
+.mini{position:relative;border-radius:10px;border:4px solid #fff;padding:10px 8px;text-align:center;font-family:'Black Han Sans';font-size:20px;color:#111;min-height:96px;display:flex;flex-direction:column;justify-content:center;word-break:keep-all;animation:pop .35s}
+.mini .del{position:absolute;top:-10px;right:-10px;width:26px;height:26px;border-radius:50%;border:none;background:#ff3b5c;color:#fff;cursor:pointer}
+
+/* ===== protest ===== */
+#protest{justify-content:flex-start;padding-top:10px}
+#protest .wrap{width:min(1280px,98vw);display:flex;flex-direction:column;gap:10px;align-items:center}
+#pgCv{width:100%;max-height:calc(100vh - 230px);aspect-ratio:16/9;object-fit:contain;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.6);background:#000;touch-action:none}
+.pgCtl{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%}
+.sbtn{font-family:'Black Han Sans';font-size:clamp(15px,1.5vw,20px);padding:10px 14px;border-radius:12px;border:3px solid #fff;color:#111;cursor:pointer;position:relative;overflow:hidden;min-width:120px;max-width:200px;word-break:keep-all;touch-action:manipulation}
+.sbtn .cd{position:absolute;left:0;bottom:0;height:5px;background:rgba(0,0,0,.5);width:0}
+.sbtn .k{position:absolute;top:2px;left:5px;font-size:11px;opacity:.6;font-family:'Jua'}
+.sbtn:active{transform:scale(.95)}
+#shoutBtn{min-width:220px}
+#shoutBtn.ready{animation:readyGlow .6s infinite alternate}
+@keyframes readyGlow{to{box-shadow:0 6px 0 #9a7300,0 0 50px #ffd54a;transform:scale(1.05)}}
+.bigcount{position:fixed;inset:0;z-index:180;display:flex;align-items:center;justify-content:center;pointer-events:none;font-family:'Black Han Sans';font-size:min(30vw,300px);color:#ffd54a;text-shadow:0 0 40px #f90,0 8px 0 #9a5b00}
+.bigcount span{animation:countPop .9s both}
+@keyframes countPop{0%{transform:scale(2.5);opacity:0}30%{transform:scale(1);opacity:1}80%{opacity:1}100%{transform:scale(.8);opacity:0}}
+.quizBox{background:#081a0b;border:3px solid var(--alien);box-shadow:0 0 50px rgba(134,255,79,.4)}
+.quizBox .qi{font-size:90px}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.qopts button{font-family:'Jua';font-size:24px;padding:14px;border-radius:14px;border:3px solid rgba(0,0,0,.3);cursor:pointer;color:#111}
+
+/* ===== ending ===== */
+#ending .wrap{width:min(1100px,96vw);display:flex;flex-direction:column;gap:18px;align-items:center}
+.cert{background:linear-gradient(135deg,#fffaf0,#f6ecd2);color:#2a2112;border-radius:8px;padding:40px 54px;position:relative;width:100%;box-shadow:0 20px 70px rgba(0,0,0,.6);border:14px solid transparent;background-clip:padding-box;outline:4px double #b8902f;outline-offset:-26px;animation:pop .8s}
+.cert h1{font-family:'Black Han Sans';text-align:center;font-size:clamp(40px,5vw,64px);margin:0 0 4px;letter-spacing:10px;color:#8a5a00}
+.cert .no{text-align:center;color:#7a6a4a;font-size:16px}
+.cert .to{font-family:'Black Han Sans';font-size:30px;margin:22px 0 12px}
+.cert p{font-size:21px;line-height:1.75;margin:0}
+.cert .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+.cert .stats div{background:rgba(184,144,47,.15);border-radius:12px;padding:10px;text-align:center;font-size:16px}
+.cert .stats b{display:block;font-family:'Black Han Sans';font-size:30px;color:#8a5a00}
+.cert .promise{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.cert .promise span{background:#fff;border:2px solid #d8bf7a;border-radius:999px;padding:4px 14px;font-size:18px}
+.cert .sign{display:flex;justify-content:flex-end;align-items:center;gap:16px;margin-top:22px;font-size:22px}
+.seal{width:96px;height:96px;border-radius:50%;border:4px solid #c8102e;color:#c8102e;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Black Han Sans';font-size:17px;line-height:1.1;transform:rotate(-12deg)}
+.endTx{width:100%;display:flex;gap:18px;align-items:center;padding:16px 20px;background:rgba(6,22,10,.9);border:2px solid rgba(134,255,79,.6);border-radius:18px}
+.endTx svg{width:110px;flex:none}
+.endTx .t{font-size:clamp(20px,2.2vw,28px);line-height:1.5;color:#e6ffd9;min-height:3em}
+
+@media (max-width:900px){
+ .bench{grid-template-columns:1fr}
+ .conveyor{display:none}
+ .bins{grid-template-columns:repeat(3,1fr)}
+ #exam .wrap,#discuss .wrap,#signs .wrap{grid-template-columns:1fr;height:auto}
+ #alkkagi .wrap{flex-direction:column;align-items:center}
+ #alkCv{width:94vw}
+ .side{width:94vw}
+ .choices,.glist{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<header id="topbar">
+  <div class="logo">🌍 지구 방위 작전</div>
+  <nav id="steps"></nav>
+  <button class="tbtn" id="sndBtn" title="효과음">🔊 효과음</button>
+  <button class="tbtn" id="ttsBtn" title="음성 읽어주기">🗣️ 음성</button>
+  <button class="tbtn" id="fsBtn" title="전체 화면">⛶ 전체화면</button>
+</header>
+
+<main id="app">
+
+<!-- TITLE -->
+<section class="screen active" id="title">
+  <div class="wrap">
+    <div class="hero"><div class="earth" data-svg="earth"></div><div class="ufo" data-svg="ufo"></div></div>
+    <div class="vs">지구인 <span style="font-size:.55em">VS</span> <b>외계인</b></div>
+    <div class="sub">도덕 · 지구를 보호하는 작은 실천 — 지구 방위 작전</div>
+    <div class="clsbox">우리 반 이름 <input id="clsIn" value="우리 반" maxlength="12"></div>
+    <button class="btn red" id="startBtn" style="font-size:28px;padding:16px 44px">🚨 작전 시작</button>
+    <div style="font-size:15px;color:#8fa2cf">화면을 클릭하거나 스페이스바를 누르면 이야기가 진행돼요 · 위쪽 단계 버튼으로 원하는 활동으로 바로 이동할 수 있어요</div>
+  </div>
+</section>
+
+<!-- PROLOGUE -->
+<section class="screen" id="prologue" data-scene="calm">
+  <div id="proStage">
+    <div class="earth" data-svg="earth"></div>
+    <div class="ufo" data-svg="ufo"></div>
+    <div id="redalert"></div>
+    <div id="warnBanner">⚠ WARNING ⚠</div>
+    <div id="txFrame"><div class="rec">● 강제 통신 수신 중</div><div data-svg="alien" id="txAlien"></div></div>
+    <button class="btn gold hide" id="proGo">🎬 작전 준비 시작 ▶</button>
+    <div id="dlg" class="panel narr">
+      <div class="av" id="dlgAv"></div>
+      <div style="flex:1"><div class="who" id="dlgWho"></div><div class="txt" id="dlgTxt"></div></div>
+      <div class="nxt">클릭 ▶</div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDY -->
+<section class="screen" id="study">
+  <div class="wrap">
+    <div class="row" style="justify-content:space-between;width:100%">
+      <div style="font-size:20px;color:#bcd4ff">📺 지구 방위 본부 긴급 방송</div>
+      <div id="countdown">⏰ 지구인고사까지 02:00</div>
+      <button class="btn ghost sm" id="skipStudy">바로 시험 보기 ▶</button>
+    </div>
+    <div id="player">
+      <div id="vTop"><span>▶ 분리배출 꿀팁 대방출 | 지구방위본부TV</span><span id="vChap"></span></div>
+      <div id="vStage"></div>
+      <div id="vCap"></div>
+      <div id="vBar"><button id="vPlay">⏸</button><div id="vProg"><i></i></div><div id="vTime">0:00 / 0:00</div><button id="vReplay" title="처음부터">⟲</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXAM -->
+<section class="screen" id="exam">
+  <div class="wrap" id="examView">
+    <div class="paper" id="paper"></div>
+    <div class="panel omr" id="omr"></div>
+  </div>
+  <div class="wrap hide" id="gradeView" style="grid-template-columns:1fr;max-width:1100px">
+    <div class="paper" id="gradePaper"></div>
+  </div>
+</section>
+
+<!-- SORT -->
+<section class="screen" id="sort">
+  <div class="wrap">
+    <div class="hud">
+      <div class="chip" id="sWave">WAVE 1/3</div>
+      <div class="chip" id="sScore">⭐ 0점</div>
+      <div class="chip" id="sCombo">🔥 콤보 0</div>
+      <div class="chip" id="sLeft">남은 쓰레기 0</div>
+      <div class="hpbar"><i id="sHp"></i><span id="sHpT">🛡️ 지구 보호막 100%</span></div>
+    </div>
+    <div class="bench">
+      <div class="panel conveyor" id="conveyor"><h4>🚚 외계인이 보내는 쓰레기</h4></div>
+      <div class="panel work" id="work">
+        <div class="curItem" id="curItem"><span class="e" id="curE">🧴</span></div>
+        <div class="itemInfo">
+          <div class="nm" id="curN"></div>
+          <div class="st" id="curS"></div>
+          <div class="done" id="curD"></div>
+          <div class="ibar"><i id="curT"></i></div>
+          <div style="font-size:15px;color:#9fb6e8">손질 도구로 준비한 뒤 → 쓰레기를 끌어서(또는 수거함을 눌러서) 알맞은 곳에 버리세요!</div>
+        </div>
+      </div>
+      <div class="panel tools" id="tools"><h4>🧰 손질 도구</h4></div>
+    </div>
+    <div class="bins" id="bins"></div>
+  </div>
+</section>
+
+<!-- DISCUSS -->
+<section class="screen" id="discuss">
+  <div class="wrap">
+    <div class="panel chat">
+      <div class="chatHead">
+        <div class="avs" style="margin-left:8px"><span style="background:#2e7d32">🌱</span><span style="background:#1565c0">🔍</span><span style="background:#8e24aa">🐙</span></div>
+        <div><div class="ttl" style="font-size:20px">작전 회의실 · AI 친구들과 토의</div><div style="font-size:14px;color:#9fb6e8">우리 반 쓰레기를 줄이는 실천, 무엇이 있을까?</div></div>
+        <div style="margin-left:auto;font-size:13px;color:#9fb6e8" id="aiMode"></div>
+      </div>
+      <div class="msgs" id="msgs"></div>
+      <div class="typing hide" id="typing">AI 친구들이 생각하는 중… 💭</div>
+      <div class="quick" id="quick"></div>
+      <form class="chatIn" id="chatForm"><input id="chatIn" placeholder="우리 반에서 할 수 있는 실천을 말해 보세요!" maxlength="80" autocomplete="off"><button class="btn sm" type="submit">보내기</button></form>
+    </div>
+    <div class="panel board">
+      <h3>📋 우리 반 실천 카드 <span id="cardCount" style="font-size:16px;font-family:Jua;color:#ffd54a">0개</span></h3>
+      <div class="cats" id="cats"></div>
+      <form class="manual" id="manualForm"><select id="manualCat"><option value="0">줄이기</option><option value="1">다시 쓰기</option><option value="2">분리배출</option></select><input id="manualIn" placeholder="직접 카드 추가 (14자 이내)" maxlength="14"><button class="btn sm gold" type="submit">추가</button></form>
+      <div class="boardFoot"><button class="btn ghost sm" id="fillCards">예시 카드 채우기</button><button class="btn sm" id="toAlk">이 카드로 알까기판 만들기 ▶</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ALKKAGI -->
+<section class="screen" id="alkkagi">
+  <div class="wrap">
+    <canvas id="alkCv" width="800" height="800"></canvas>
+    <div class="panel side">
+      <div class="ttl" style="font-size:24px;text-align:center">🥏 사이버 알까기</div>
+      <div class="turn earth" id="alkTurn">지구인 차례</div>
+      <div class="seg" id="alkMode"><button data-m="ai" class="on">vs 외계인(컴퓨터)</button><button data-m="pvp">모둠 vs 모둠</button></div>
+      <div class="howto">내 알을 꾹 누른 채 <b>반대 방향으로 당겼다가</b> 놓으면 발사! 멀리 당길수록 세게 나가요. 상대 알을 판 밖으로 모두 밀어내면 승리!</div>
+      <div><div style="font-size:15px;color:#9fd2ff">🌍 지구인 알 (우리 반 실천)</div><div class="sideList" id="alkE"></div></div>
+      <div><div style="font-size:15px;color:#c4ff9f">👽 외계인 알 (나쁜 습관)</div><div class="sideList" id="alkA"></div></div>
+      <button class="btn ghost sm" id="alkReset">⟲ 다시 하기</button>
+      <button class="btn sm" id="toSigns">다음: 시위 팻말 만들기 ▶</button>
+    </div>
+  </div>
+</section>
+
+<!-- SIGNS -->
+<section class="screen" id="signs">
+  <div class="wrap">
+    <div class="panel editor">
+      <div class="ttl" style="font-size:26px">🪧 외계인을 몰아낼 시위 팻말 만들기</div>
+      <label>구호 (16자 이내)</label>
+      <input id="sgText" maxlength="16" placeholder="예) 지구는 우리가 지킨다!">
+      <div class="ideas" id="sgIdeas"></div>
+      <label>만든 사람 / 모둠</label>
+      <input id="sgBy" maxlength="10" placeholder="예) 1모둠" style="font-size:20px">
+      <label>팻말 색</label>
+      <div class="swatches" id="sgSw"></div>
+      <label>스티커</label>
+      <div class="stickers" id="sgSt"></div>
+      <div class="signPrev"><div class="signBoard" id="sgPrev"></div><div class="stick"></div></div>
+      <button class="btn gold" id="sgAdd">➕ 팻말 완성!</button>
+    </div>
+    <div class="panel signList">
+      <div class="row" style="justify-content:space-between"><div class="ttl" style="font-size:22px">시위대 팻말 <span id="sgCount" style="color:#ffd54a">0</span>개 <span style="font-size:15px;font-family:Jua;color:#9fb6e8">(3~8개)</span></div><button class="btn ghost sm" id="sgFill">예시 팻말 채우기</button></div>
+      <div class="signGrid" id="sgGrid"></div>
+      <button class="btn red" id="toProtest" style="margin-top:auto">📣 시위 시작! 외계인을 몰아내자</button>
+    </div>
+  </div>
+</section>
+
+<!-- PROTEST -->
+<section class="screen" id="protest">
+  <div class="wrap">
+    <canvas id="pgCv" width="1280" height="720"></canvas>
+    <div class="pgCtl" id="pgCtl"></div>
+  </div>
+</section>
+
+<!-- ENDING -->
+<section class="screen" id="ending">
+  <div class="wrap">
+    <div class="endTx"><div data-svg="alien" id="endAlien"></div><div class="t" id="endTxt"></div></div>
+    <div id="certWrap" class="hide" style="width:100%"></div>
+    <div class="row hide" id="endBtns"><button class="btn ghost sm" id="replayAll">⟲ 처음부터 다시</button></div>
+  </div>
+</section>
+
+</main>
+<div id="toast"></div>
+
+<script>
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const rnd=(a,b)=>a+Math.random()*(b-a), pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const S={cls:'우리 반',exam:null,sort:null,cards:[],signs:[],alkWinner:null};
+
+/* ========== SVG ASSETS ========== */
+let svgId=0;
+function earthSVG(){const k='e'+(svgId++);
+ const blobs=`<path d="M18 52c14-18 40-20 52-8 9 9 2 22-8 26-12 5-10 20-22 22-14 2-30-18-22-40z"/><path d="M96 30c12-6 30-2 34 10 3 10-8 14-6 24 2 12 18 14 16 28-2 12-20 16-30 8-10-8-6-22-16-30-10-8-12-34 2-40z"/><path d="M40 118c12-6 26 2 30 14 4 14-4 30-16 34-12 4-22-8-22-22 0-10-2-20 8-26z"/><path d="M140 120c10-8 30-6 38 6 6 10-2 24-14 26-14 2-30-4-30-16 0-6 2-12 6-16z"/><path d="M150 50c8-4 18 0 20 8 2 8-6 12-12 12-8 0-14-4-14-10 0-4 2-8 6-10z"/>`;
+ return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="${k}g" cx="35%" cy="30%"><stop offset="0" stop-color="#8fdcff"/><stop offset=".55" stop-color="#1f74e0"/><stop offset="1" stop-color="#0a2466"/></radialGradient><clipPath id="${k}c"><circle cx="100" cy="100" r="90"/></clipPath><radialGradient id="${k}s" cx="72%" cy="72%"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></radialGradient><radialGradient id="${k}a"><stop offset=".85" stop-color="#5fc4ff" stop-opacity=".5"/><stop offset="1" stop-color="#5fc4ff" stop-opacity="0"/></radialGradient></defs><circle cx="100" cy="100" r="100" fill="url(#${k}a)"/><circle cx="100" cy="100" r="90" fill="url(#${k}g)"/><g clip-path="url(#${k}c)"><g class="continents" fill="#3fbf5f" stroke="#2c9a48" stroke-width="2"><g>${blobs}</g><g transform="translate(200 0)">${blobs}</g></g><g fill="#fff" opacity=".55"><ellipse cx="60" cy="40" rx="28" ry="5"/><ellipse cx="130" cy="150" rx="34" ry="5"/><ellipse cx="150" cy="85" rx="20" ry="4"/></g></g><circle cx="100" cy="100" r="90" fill="url(#${k}s)"/></svg>`;}
+function ufoSVG(){const k='u'+(svgId++);let l='';for(let i=0;i<9;i++){l+=`<circle class="ufo-light" cx="${30+i*30}" cy="${88+Math.sin(i/8*Math.PI)*6}" r="6" fill="${i%2?'#86ff4f':'#ffd54a'}"/>`;}
+ return `<svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="${k}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d6deee"/><stop offset=".5" stop-color="#7d8aa6"/><stop offset="1" stop-color="#2d3550"/></linearGradient><radialGradient id="${k}d" cx=".4" cy=".3"><stop offset="0" stop-color="#e6fff3"/><stop offset="1" stop-color="#21c98b" stop-opacity=".75"/></radialGradient><linearGradient id="${k}m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#86ff4f" stop-opacity=".55"/><stop offset="1" stop-color="#86ff4f" stop-opacity="0"/></linearGradient></defs><path class="beam" d="M118 96 L50 170 L250 170 L182 96Z" fill="url(#${k}m)"/><ellipse cx="150" cy="58" rx="56" ry="44" fill="url(#${k}d)"/><g fill="#3d9b2f"><ellipse cx="150" cy="58" rx="16" ry="19"/><ellipse cx="143" cy="55" rx="5" ry="7" fill="#081"/><ellipse cx="157" cy="55" rx="5" ry="7" fill="#081"/></g><ellipse cx="150" cy="88" rx="146" ry="30" fill="url(#${k}b)"/><ellipse cx="150" cy="80" rx="140" ry="14" fill="#eef3fb" opacity=".45"/>${l}<ellipse cx="150" cy="112" rx="40" ry="8" fill="#86ff4f" opacity=".6"/></svg>`;}
+function alienSVG(){return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><line x1="70" y1="40" x2="52" y2="8" stroke="#5cc84a" stroke-width="6" stroke-linecap="round"/><line x1="130" y1="40" x2="148" y2="8" stroke="#5cc84a" stroke-width="6" stroke-linecap="round"/><circle cx="52" cy="8" r="8" fill="#ffd54a" class="eye-glow"/><circle cx="148" cy="8" r="8" fill="#ffd54a" class="eye-glow"/><path d="M40 196c6-34 30-44 60-44s54 10 60 44z" fill="#5b2a86"/><path d="M80 158l20 24 20-24" fill="#ffd54a"/><ellipse cx="100" cy="92" rx="68" ry="74" fill="#74e05f"/><ellipse cx="100" cy="92" rx="68" ry="74" fill="url(#none)" stroke="#4fb83f" stroke-width="3"/><ellipse cx="68" cy="88" rx="24" ry="15" transform="rotate(25 68 88)" fill="#0a0f0a"/><ellipse cx="132" cy="88" rx="24" ry="15" transform="rotate(-25 132 88)" fill="#0a0f0a"/><ellipse cx="62" cy="83" rx="6" ry="4" fill="#bfffb0" class="eye-glow"/><ellipse cx="126" cy="83" rx="6" ry="4" fill="#bfffb0" class="eye-glow"/><path d="M52 62l30 10M148 62l-30 10" stroke="#2f7a24" stroke-width="5" stroke-linecap="round"/><ellipse class="mouth" cx="100" cy="132" rx="16" ry="4" fill="#1d3a17"/><path d="M84 128q16 8 32 -2" stroke="#1d3a17" stroke-width="3" fill="none"/></svg>`;}
+function fillSVGs(root=document){root.querySelectorAll('[data-svg]').forEach(el=>{const t=el.dataset.svg;el.innerHTML=t==='earth'?earthSVG():t==='ufo'?ufoSVG():alienSVG();});}
+fillSVGs();
+
+/* ========== STARS ========== */
+(function(){const cv=$('#stars'),ctx=cv.getContext('2d');let st=[];function rs(){cv.width=innerWidth;cv.height=innerHeight;st=[];for(let i=0;i<220;i++)st.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.6+.2,p:Math.random()*6});}rs();addEventListener('resize',rs);
+ function f(t){ctx.clearRect(0,0,cv.width,cv.height);for(const s of st){ctx.globalAlpha=.35+.65*Math.abs(Math.sin(t/1400+s.p));ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fill();}ctx.globalAlpha=1;requestAnimationFrame(f);}requestAnimationFrame(f);})();
+
+/* ========== AUDIO ========== */
+let AC=null,soundOn=true,ttsOn=true;
+function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}if(AC.state==='suspended')AC.resume().catch(()=>{});return AC;}
+function tone(f,d=.15,type='sine',v=.15,slide=0,delay=0){if(!soundOn)return;const a=ac();if(!a)return;try{const t=a.currentTime+delay,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),t+d);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0008,t+d);o.connect(g).connect(a.destination);o.start(t);o.stop(t+d+.03);}catch(e){}}
+function noise(d=.3,v=.2,delay=0,hp=800){if(!soundOn)return;const a=ac();if(!a)return;try{const b=a.createBuffer(1,a.sampleRate*d,a.sampleRate),c=b.getChannelData(0);for(let i=0;i<c.length;i++)c[i]=(Math.random()*2-1)*(1-i/c.length);const s=a.createBufferSource();s.buffer=b;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.value=hp;const g=a.createGain();g.gain.value=v;s.connect(f).connect(g).connect(a.destination);s.start(a.currentTime+delay);}catch(e){}}
+const SFX={
+ click(){tone(900,.05,'square',.05);},
+ ok(){tone(660,.1,'triangle',.22);tone(880,.1,'triangle',.22,0,.08);tone(1320,.18,'triangle',.2,0,.16);},
+ bad(){tone(220,.35,'sawtooth',.14,-120);tone(160,.4,'square',.08,-60,.05);},
+ tool(){noise(.18,.25,0,1800);tone(500,.08,'sine',.1,300);},
+ crush(){noise(.25,.5,0,500);tone(120,.2,'square',.12,-60);},
+ alarm(){for(let i=0;i<6;i++){tone(950,.32,'sawtooth',.11,-450,i*.42);}},
+ drone(){tone(55,3.5,'sawtooth',.12,-10);tone(82,3.5,'sine',.15,5);tone(110,3,'triangle',.06,-20,.5);},
+ laugh(){for(let i=0;i<6;i++)tone(300-i*25,.14,'square',.08,40,i*.16);},
+ bell(){[523,659,784,1047].forEach((f,i)=>tone(f,.5,'sine',.15,0,i*.15));},
+ tick(){tone(1400,.04,'square',.06);},
+ pop(){tone(400,.12,'sine',.2,600);},
+ hit(){tone(300,.08,'square',.1,-150);noise(.08,.2,0,2000);},
+ boom(){noise(.8,.7,0,300);tone(80,.7,'sawtooth',.2,-50);},
+ win(){[523,659,784,1047,784,1047,1319].forEach((f,i)=>tone(f,.3,'triangle',.18,0,i*.13));},
+ lose(){[392,349,311,262].forEach((f,i)=>tone(f,.4,'sawtooth',.1,0,i*.25));},
+ type(){tone(1500,.015,'square',.025);},
+ knock(v){tone(700+Math.random()*200,.05,'triangle',Math.min(.3,v),-200);noise(.05,Math.min(.3,v),0,2500);}
+};
+let voices=[];function loadVoices(){try{voices=speechSynthesis.getVoices();}catch(e){}}
+if(window.speechSynthesis){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
+function speak(text,o={}){if(!ttsOn||!window.speechSynthesis)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text.replace(/[⚠「」▶✨🌍👽]/g,''));u.lang='ko-KR';u.pitch=o.pitch??1;u.rate=o.rate??1;const v=voices.find(v=>/ko/i.test(v.lang));if(v)u.voice=v;speechSynthesis.speak(u);}catch(e){}}
+function hush(){try{window.speechSynthesis&&speechSynthesis.cancel();}catch(e){}}
+$('#sndBtn').onclick=()=>{soundOn=!soundOn;$('#sndBtn').classList.toggle('off',!soundOn);};
+$('#ttsBtn').onclick=()=>{ttsOn=!ttsOn;$('#ttsBtn').classList.toggle('off',!ttsOn);if(!ttsOn)hush();};
+$('#fsBtn').onclick=()=>{try{if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen().catch(()=>toast('이 화면에서는 전체 화면을 쓸 수 없어요. 브라우저의 F11을 눌러 보세요.',true));}catch(e){toast('F11 키로 전체 화면을 켜 보세요.',true);}};
+function toast(m,bad){const d=document.createElement('div');d.className='toast'+(bad?' bad':'');d.textContent=m;$('#toast').appendChild(d);setTimeout(()=>d.remove(),2800);}
+
+/* typewriter */
+let typing=null;
+function typeInto(el,text,speed=36){return new Promise(res=>{if(typing)typing.finish(true);el.textContent='';let i=0;const iv=setInterval(()=>{i++;el.textContent=text.slice(0,i);if(i%2===0)SFX.type();if(i>=text.length){clearInterval(iv);typing=null;res();}},speed);typing={finish(silent){clearInterval(iv);el.textContent=text;typing=null;res();}};});}
+
+/* ========== NAV ========== */
+const STEPS=[['prologue','① 외계인 침공'],['study','② 작전 준비'],['exam','③ 지구인고사'],['sort','④ 분리배출 작전'],['discuss','⑤ 작전 회의'],['alkkagi','⑥ 사이버 알까기'],['signs','⑦ 팻말 만들기'],['protest','⑧ 지구 수호 시위'],['ending','⑨ 임명식']];
+const ENTER={},LEAVE={};let cur='title';const doneSet=new Set();
+function renderSteps(){$('#steps').innerHTML=STEPS.map(([id,n])=>`<button class="step ${id===cur?'cur':''} ${doneSet.has(id)&&id!==cur?'done':''}" data-go="${id}">${n}</button>`).join('');}
+$('#steps').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){SFX.click();go(b.dataset.go);}});
+function go(id){if(LEAVE[cur])LEAVE[cur]();hush();if(typing)typing.finish(true);doneSet.add(cur);cur=id;$$('.screen').forEach(s=>s.classList.toggle('active',s.id===id));scrollTo(0,0);renderSteps();if(ENTER[id])ENTER[id]();}
+renderSteps();
+$('#startBtn').onclick=()=>{ac();S.cls=($('#clsIn').value.trim()||'우리 반');go('prologue');};
+
+/* ========== PROLOGUE ========== */
+const PRO=[
+ {s:'calm',w:'narr',t:'2026년 11월. 우리의 지구는 오늘도 푸르게 빛나고 있었다...'},
+ {s:'calm',w:'narr',t:'파란 바다, 초록 숲, 그리고 그 속에서 웃고 떠드는 {cls} 친구들.'},
+ {s:'alert',w:'sys',t:'⚠ 경고! 경고! 정체불명의 거대 비행체가 지구로 빠르게 접근 중!',fx:'alarm'},
+ {s:'ufo',w:'sys',t:'비행체가 대기권에 진입했습니다! 전 세계 모든 화면에 강제 통신이 연결됩니다...',fx:'drone'},
+ {s:'tx',w:'alien',t:'지구인들이여, 들어라. 나는 그레이볼 행성 함대의 사령관, 조르크다.'},
+ {s:'tx',w:'alien',t:'우리 행성 그레이볼은 메마르고 척박하다. 물도, 숲도, 꽃 한 송이도 없지.'},
+ {s:'tx',w:'alien',t:'그런데 너희의 지구는... 푸른 바다와 초록 숲. 정말 눈부시게 아름답구나.'},
+ {s:'tx',w:'alien',t:'하지만 너희는 그 아름다운 지구에 쓰레기를 마구 버리고, 아무렇게나 섞어 버리고, 물건을 아끼지도 않는다!'},
+ {s:'tx',w:'alien',t:'우리가 지구를 훨씬 더 잘 돌볼 수 있다. 그러니 지구를 우리 그레이볼에게 넘겨라!'},
+ {s:'tx',w:'alien',t:'단, 기회를 한 번 주겠다. 너희가 지구를 지킬 자격이 있는지 「지구인고사」로 증명해 보아라.'},
+ {s:'tx',w:'alien',t:'증명하지 못하면... 지구는 우리 것이다. 크크크크...',fx:'laugh'},
+ {s:'hq',w:'hq',t:'여기는 지구 방위 본부! {cls} 지구인 여러분, 지구인고사까지 단 2분 남았습니다!'},
+ {s:'hq',w:'hq',t:'지금 바로 「분리배출 꿀팁 영상」을 보고 시험을 준비하세요. 지구의 운명이 여러분 손에 달렸습니다!',end:true}
+];
+const WHO={narr:['',''],sys:['🚨 긴급 경보','⚠️'],alien:['👽 그레이볼 사령관 조르크',null],hq:['🛰️ 지구 방위 본부','🛰️']};
+let proI=0,proBusy=false;
+ENTER.prologue=()=>{proI=0;$('#proGo').classList.add('hide');proShow();};
+async function proShow(){const p=PRO[proI];const sec=$('#prologue');sec.dataset.scene=p.s;const d=$('#dlg');d.className='panel '+p.w;$('#dlgWho').textContent=WHO[p.w][0];
+ const av=$('#dlgAv');if(p.w==='alien'){if(!av.querySelector('svg'))av.innerHTML=alienSVG();}else av.textContent=WHO[p.w][1]||'';
+ if(p.fx&&SFX[p.fx])SFX[p.fx]();
+ const t=p.t.replace('{cls}',S.cls);
+ if(p.w==='alien'){speak(t,{pitch:.1,rate:.85});$('#txAlien').classList.add('talking');av.classList.add('talking');}else if(p.w!=='narr'){speak(t,{pitch:p.w==='sys'?1.3:1.05,rate:1.08});}else speak(t,{pitch:.9,rate:.92});
+ proBusy=true;await typeInto($('#dlgTxt'),t,p.w==='alien'?44:34);proBusy=false;$('#txAlien').classList.remove('talking');av.classList.remove('talking');
+ if(p.end)$('#proGo').classList.remove('hide');}
+function proNext(){if(typing){typing.finish();return;}if(PRO[proI].end){go('study');return;}proI++;proShow();}
+$('#dlg').addEventListener('click',proNext);
+$('#proGo').onclick=e=>{e.stopPropagation();go('study');};
+
+/* ========== STUDY (VIDEO) ========== */
+const binCol={plastic:'#f6c945',paper:'#7fd36b',pack:'#ffe6a8',can:'#4f7fe0',glass:'#ff9a3d',vinyl:'#b37bff',general:'#c9ced8',battery:'#ff6b6b',medicine:'#5fd3c4'};
+const SCENES=[
+ {d:8,chap:'오프닝',cap:'분리배출 꿀팁 대방출! 4대 원칙만 기억하면 지구를 지킬 수 있어요!',h:`<div class="tag pop">지구인고사 대비 특강</div><h2 class="pop" style="animation-delay:.2s">♻️ 분리배출 꿀팁 대방출</h2><div class="emo pop" style="animation-delay:.5s">🌍</div><div class="pop" style="font-size:clamp(18px,2vw,28px);animation-delay:.8s">비운다 · 헹군다 · 분리한다 · 섞지 않는다</div>`},
+ {d:12,chap:'원칙 ① 비운다',cap:'원칙 ① 비운다! 병이나 캔 속에 남은 음료와 내용물은 깨끗이 비워요.',h:`<div class="tag">4대 원칙 ①</div><h2>비운다</h2><div style="display:flex;flex-direction:column;align-items:center"><span class="emo pour">🧴</span><div class="dropz"><span>💧</span><span>💧</span><span>💧</span></div></div>`},
+ {d:12,chap:'원칙 ② 헹군다',cap:'원칙 ② 헹군다! 음식물이나 소스 같은 이물질은 물로 깨끗이 헹궈요.',h:`<div class="tag">4대 원칙 ②</div><h2>헹군다</h2><div style="display:flex;flex-direction:column;align-items:center"><span class="emo" style="font-size:clamp(60px,8vw,110px)">🚰</span><div class="stream"></div><span class="emo wiggle" style="margin-top:-30px">🥤</span></div>`},
+ {d:12,chap:'원칙 ③ 분리한다',cap:'원칙 ③ 분리한다! 라벨, 테이프, 스프링처럼 다른 재질은 떼어 내고, 페트병과 캔은 찌그러뜨려요.',h:`<div class="tag">4대 원칙 ③</div><h2>분리한다</h2><div class="bottlebox squish"><span class="emo">🧴</span><div class="lbl">라벨</div></div><div style="font-size:clamp(16px,1.8vw,24px)">라벨 떼기 ✂️ → 찌그러뜨리기 👊</div>`},
+ {d:12,chap:'원칙 ④ 섞지 않는다',cap:'원칙 ④ 섞지 않는다! 종류별로 나누어 각각 알맞은 수거함에 넣어요.',h:`<div class="tag">4대 원칙 ④</div><h2>섞지 않는다</h2><div class="bins3"><div class="bin3" style="background:${binCol.can}">캔<span class="it">🥫</span></div><div class="bin3" style="background:${binCol.paper};color:#123">종이<span class="it" style="animation-delay:1.2s">📦</span></div><div class="bin3" style="background:${binCol.plastic};color:#321">플라스틱<span class="it" style="animation-delay:2.4s">🧴</span></div></div>`},
+ {d:15,chap:'플라스틱·종이 요령',cap:'플라스틱은 다른 재질이 섞여 있으면 일반 쓰레기! 종이는 테이프를 떼고, 이물질이 묻은 종이는 일반 쓰레기예요. 우유팩 같은 종이팩은 전용 수거함에!',h:`<div class="cards"><div class="vcard pop"><h3>🧴 플라스틱류</h3>투명 페트병은 <b>라벨 떼고 찌그러뜨려</b> 배출!<br>다른 재질과 섞여 있으면 → <b>일반 쓰레기</b></div><div class="vcard pop" style="animation-delay:.6s"><h3>📦 종이류</h3><b>테이프·스프링</b>은 떼고 배출!<br>다른 재질과 혼합·이물질 묻은 종이 → <b>일반 쓰레기</b><br>🥛 종이팩은 <b>전용 수거함</b></div></div>`},
+ {d:15,chap:'비닐·유리·캔 요령',cap:'비닐은 이물질을 없애지 않으면 일반 쓰레기! 깨진 유리는 신문지에 싸서 일반 쓰레기로. 캔은 내용물을 비우고 잘 씻은 후 찌그러뜨려요.',h:`<div class="cards"><div class="vcard pop"><h3>🛍️ 비닐류</h3>이물질을 <b>없애지 않으면</b><br>→ 일반 쓰레기</div><div class="vcard pop" style="animation-delay:.5s"><h3>🍾 유리류</h3>깨진 유리는 <b>신문지에 싸서</b><br>→ 일반 쓰레기</div><div class="vcard pop" style="animation-delay:1s"><h3>🥫 캔류</h3>내용물을 비우고 잘 씻은 후<br><b>찌그러뜨려</b> 배출</div></div>`},
+ {d:12,chap:'일반·의약품·건전지',cap:'일반 쓰레기는 종량제 봉투에! 폐의약품은 보건소나 약국의 전용 수거함, 폐건전지도 전용 수거함에 버려요.',h:`<div class="cards"><div class="vcard pop"><h3>🗑️ 일반 쓰레기</h3><b>종량제 봉투</b>에 넣어서 배출</div><div class="vcard pop" style="animation-delay:.5s"><h3>💊 폐의약품</h3>보건소·약국 등에 있는<br><b>전용 수거함</b>에 배출</div><div class="vcard pop" style="animation-delay:1s"><h3>🔋 폐건전지</h3><b>전용 수거함</b>에 배출</div></div>`},
+ {d:12,chap:'핵심 정리',cap:'정리! 비우고, 헹구고, 분리하고, 섞지 않기! 지구인고사, 잘 볼 수 있죠? 지구를 부탁해요!',h:`<h2 class="pop">✅ 핵심 정리</h2><div class="chk"><span class="pop" style="animation-delay:.3s">🧴 비우고</span><em>→</em><span class="pop" style="animation-delay:.9s">🚰 헹구고</span><em>→</em><span class="pop" style="animation-delay:1.5s">✂️ 분리하고</span><em>→</em><span class="pop" style="animation-delay:2.1s">🗂️ 섞지 않기</span></div><div class="pop" style="font-size:clamp(20px,2.4vw,34px);animation-delay:3s;color:#ffd54a">지구인고사 화이팅! 지구를 부탁해 🌍</div>`}
+];
+const VTOT=SCENES.reduce((a,s)=>a+s.d,0);
+const V={t:0,playing:true,scene:-1,iv:null,cd:120,cdIv:null};
+function fmt(s){s=Math.max(0,Math.floor(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+function vSceneAt(t){let a=0;for(let i=0;i<SCENES.length;i++){if(t<a+SCENES[i].d)return i;a+=SCENES[i].d;}return SCENES.length-1;}
+function vRender(){const i=vSceneAt(V.t);if(i!==V.scene){V.scene=i;const s=SCENES[i];$('#vStage').innerHTML=`<div class="sc">${s.h}</div>`;$('#vCap').textContent=s.cap;$('#vChap').textContent=s.chap;if(V.playing)speak(s.cap,{rate:1.12,pitch:1.1});SFX.pop();}
+ $('#vProg i').style.width=(V.t/VTOT*100)+'%';$('#vTime').textContent=fmt(V.t)+' / '+fmt(VTOT);}
+function vSeek(t){V.t=clamp(t,0,VTOT-.01);V.scene=-1;vRender();}
+ENTER.study=()=>{V.t=0;V.scene=-1;V.playing=true;V.cd=120;$('#vPlay').textContent='⏸';
+ let marks='<i></i>',a=0;SCENES.forEach(s=>{a+=s.d;if(a<VTOT)marks+=`<span class="chap" style="left:${a/VTOT*100}%"></span>`;});$('#vProg').innerHTML=marks;
+ vRender();clearInterval(V.iv);V.iv=setInterval(()=>{if(!V.playing)return;V.t+=.1;if(V.t>=VTOT){V.t=VTOT-.01;V.playing=false;$('#vPlay').textContent='▶';}vRender();},100);
+ clearInterval(V.cdIv);updCd();V.cdIv=setInterval(()=>{V.cd--;updCd();if(V.cd<=10&&V.cd>0)SFX.tick();if(V.cd<=0){clearInterval(V.cdIv);startExamIntro();}},1000);};
+function updCd(){const c=$('#countdown');c.textContent='⏰ 지구인고사까지 '+String(Math.floor(V.cd/60)).padStart(2,'0')+':'+String(V.cd%60).padStart(2,'0');c.classList.toggle('hurry',V.cd<=10);}
+LEAVE.study=()=>{clearInterval(V.iv);clearInterval(V.cdIv);};
+$('#vPlay').onclick=()=>{V.playing=!V.playing;if(V.t>=VTOT-.05&&V.playing)vSeek(0);$('#vPlay').textContent=V.playing?'⏸':'▶';if(!V.playing)hush();else{V.scene=-1;vRender();}};
+$('#vReplay').onclick=()=>{V.playing=true;$('#vPlay').textContent='⏸';vSeek(0);};
+$('#vProg').addEventListener('click',e=>{const r=e.currentTarget.getBoundingClientRect();vSeek((e.clientX-r.left)/r.width*VTOT);});
+$('#skipStudy').onclick=()=>startExamIntro();
+function startExamIntro(){LEAVE.study();hush();SFX.bell();
+ const ov=document.createElement('div');ov.className='overlay';ov.innerHTML=`<div class="panel ovBox"><div style="font-size:70px">📝</div><h2>지구인고사 시작!</h2><p>제1교시 <b>분리배출 영역</b> · 10문항 · 100점 만점 · 제한 시간 5분<br>힌트도 정답도 없습니다. 틀리면 점수가 깎여요!<br><b style="color:#ffd54a">70점 이상이면 지구인 자격 획득!</b></p><button class="btn">시험지 받기 ▶</button></div>`;
+ document.body.appendChild(ov);speak('지구인고사를 시작합니다. 제1교시 분리배출 영역.',{rate:1});ov.querySelector('button').onclick=()=>{ov.remove();go('exam');};}
+
+/* ========== EXAM ========== */
+const QS=[
+ {q:'분리배출 4대 원칙으로 <u>올바르지 않은</u> 것을 찾아 번호를 쓰시오.',c:['비운다','헹군다','분리한다','섞는다'],a:[3],ex:'4대 원칙은 비운다·헹군다·분리한다·<b>섞지 않는다</b>예요.'},
+ {q:'플라스틱류 분리배출 요령으로 올바른 것을 찾아 번호를 쓰시오.',c:['물로 채워서 배출한다.','투명 페트병은 찌그러뜨려 배출한다.','투명 페트병의 상표는 제거하지 않는다.','다른 재질과 섞여 있어도 분리배출 가능하다.'],a:[1],ex:'투명 페트병은 <b>라벨을 떼고 찌그러뜨려</b> 배출! 다른 재질과 섞이면 일반 쓰레기예요.'},
+ {q:'종이류와 종이 팩류 분리배출 요령으로 올바른 것을 찾아 번호를 쓰시오.',c:['테이프 등을 제거하지 않고 배출한다.','이물질이 있어도 씻지 않고 배출한다.','종이 팩류는 전용 수거함에 배출한다.','종이 팩류는 절대 종이류에 넣을 수 없다.'],a:[2],ex:'종이 팩(우유팩 등)은 <b>전용 수거함</b>에 배출해요.'},
+ {q:'다음 중 분리배출 유형이 <u>아닌</u> 것을 찾아 번호를 쓰시오.',c:['유리류','캔류','비닐류','나무류'],a:[3],ex:'분리배출 유형은 플라스틱·종이·비닐·유리·캔류 등이에요. <b>나무류</b>는 없어요.'},
+ {q:'일반 쓰레기로 버려야 하는 것을 <u>모두</u> 찾아 번호를 쓰시오.',c:['여러 재질이 섞인 플라스틱','음식 소스 등 이물질이 묻은 종이','깨끗하게 씻어 말린 우유 종이 팩','비닐 표기가 되어 있는 깨끗한 비닐'],a:[0,1],multi:true,ex:'<b>①, ②</b> 모두 골라야 정답! 섞인 재질·이물질 묻은 종이는 일반 쓰레기예요.'},
+ {q:'빈칸에 들어갈 낱말로 알맞은 것을 골라 번호를 쓰시오.',box:'<b>캔류</b>는 내용물을 모두 비우고 잘 씻은 후<br><span class="blank">&nbsp;</span> 배출',c:['돌돌 말아','구멍을 뚫어','찌그러뜨려','작게 잘라'],a:[2],ex:'캔류는 비우고 씻은 후 <b>찌그러뜨려</b> 배출해요.'},
+ {q:'빈칸에 들어갈 낱말로 알맞은 것을 골라 번호를 쓰시오.',box:'<span class="blank">&nbsp;</span>은(는) 보건소나 약국, 행정 복지 센터 등에 있는 전용 수거함에 배출',c:['폐건전지','폐의약품','스티로폼류','일반 쓰레기'],a:[1],ex:'보건소·약국의 전용 수거함은 <b>폐의약품</b>!'},
+ {q:'다음 중 전용 수거함이 <u>없는</u> 것을 찾아 번호를 쓰시오.',c:['종이 팩','폐의약품','폐건전지','유리'],a:[3],ex:'종이 팩·폐의약품·폐건전지는 전용 수거함이 있어요. <b>유리</b>는 유리류로 분리배출!'},
+ {q:'<b>깨진 유리</b>는 어떻게 버려야 하는지 올바른 것을 찾아 번호를 쓰시오.',c:['유리류 수거함에 그대로 넣는다.','신문지에 싸서 일반 쓰레기로 배출한다.','캔류와 함께 넣는다.','잘게 부숴서 하수구에 버린다.'],a:[1],ex:'깨진 유리는 다치지 않게 <b>신문지에 싸서 일반 쓰레기</b>로!'},
+ {q:'<b>비닐류</b> 분리배출 요령으로 올바른 것을 찾아 번호를 쓰시오.',c:['이물질이 묻어도 그대로 비닐류에 넣는다.','이물질을 없애지 않으면 일반 쓰레기로 배출한다.','비닐은 모두 일반 쓰레기로 버린다.','비닐은 종이류와 섞어서 버린다.'],a:[1],ex:'비닐은 <b>이물질을 없애지 않으면 일반 쓰레기</b>예요.'}
+];
+const NUM=['①','②','③','④'];
+const EX={i:0,ans:[],tm:300,iv:null,submitted:false};
+ENTER.exam=()=>{EX.i=0;EX.ans=QS.map(()=>[]);EX.tm=300;EX.submitted=false;$('#examView').classList.remove('hide');$('#gradeView').classList.add('hide');renderQ();renderOmr();clearInterval(EX.iv);EX.iv=setInterval(()=>{EX.tm--;renderOmr();if(EX.tm===30)toast('⏰ 30초 남았습니다!',true);if(EX.tm<=10&&EX.tm>0)SFX.tick();if(EX.tm<=0){clearInterval(EX.iv);toast('시간 종료! 답안지를 걷습니다.',true);submitExam();}},1000);};
+LEAVE.exam=()=>clearInterval(EX.iv);
+function renderQ(){const q=QS[EX.i],a=EX.ans[EX.i];
+ $('#paper').innerHTML=`<div class="phead"><div class="t1">2026학년도 지구인 자격 고사<br>문제지</div><div class="t2">분리배출 영역</div><div class="t3">제1교시<br>성명: ${esc(S.cls)} 지구인</div></div>
+ <div class="qnum">${EX.i+1}.</div><div class="qtext">${q.q}${q.multi?' <span style="font-size:.7em;color:#c0142a">(정답 여러 개)</span>':''}</div>${q.box?`<div class="qbox">${q.box}</div>`:''}
+ <div class="choices">${q.c.map((c,k)=>`<button class="choice ${a.includes(k)?'sel':''}" data-k="${k}"><span class="no">${NUM[k]}</span> ${c}</button>`).join('')}</div>
+ <div class="pnav"><button class="btn ghost sm" style="color:#333;border-color:#bbb" id="qPrev" ${EX.i===0?'disabled':''}>◀ 이전 문제</button>${EX.i<QS.length-1?'<button class="btn blue sm" id="qNext">다음 문제 ▶</button>':'<button class="btn red sm" id="qSubmit">📮 답안지 제출</button>'}</div>`;
+ $$('#paper .choice').forEach(b=>b.onclick=()=>{SFX.click();const k=+b.dataset.k,arr=EX.ans[EX.i];if(q.multi){const p=arr.indexOf(k);if(p>=0)arr.splice(p,1);else arr.push(k);}else{EX.ans[EX.i]=[k];}renderQ();renderOmr();});
+ const pv=$('#qPrev');if(pv)pv.onclick=()=>{EX.i--;renderQ();renderOmr();};
+ const nx=$('#qNext');if(nx)nx.onclick=()=>{EX.i++;renderQ();renderOmr();};
+ const sb=$('#qSubmit');if(sb)sb.onclick=()=>confirmSubmit();}
+function renderOmr(){const m=Math.floor(EX.tm/60),s=EX.tm%60;
+ $('#omr').innerHTML=`<h4>📋 OMR 답안지</h4><div class="tm ${EX.tm<=30?'hurry':''}">${m}:${String(s).padStart(2,'0')}</div><div class="grid">${QS.map((q,i)=>`<div class="r ${i===EX.i?'cur':''}" data-i="${i}"><b>${i+1}</b>${[0,1,2,3].map(k=>`<i class="${EX.ans[i].includes(k)?'on':''}">${k+1}</i>`).join('')}</div>`).join('')}</div><div style="font-size:14px;color:#9fb6e8;text-align:center">답한 문항 ${EX.ans.filter(a=>a.length).length} / ${QS.length}</div><button class="btn red sm" id="omrSubmit">📮 제출</button>`;
+ $$('#omr .r').forEach(r=>r.onclick=()=>{EX.i=+r.dataset.i;renderQ();renderOmr();});$('#omrSubmit').onclick=()=>confirmSubmit();}
+function confirmSubmit(){const un=EX.ans.filter(a=>!a.length).length;const ov=document.createElement('div');ov.className='overlay';ov.innerHTML=`<div class="panel ovBox"><h2>답안지를 제출할까요?</h2><p>${un?`<b style="color:#ff7088">아직 답하지 않은 문제가 ${un}개 있어요!</b> 빈칸은 틀린 것으로 처리돼요.<br>`:''}제출하면 다시 고칠 수 없어요.</p><div class="row"><button class="btn ghost sm" id="cNo">다시 확인하기</button><button class="btn red sm" id="cYes">제출합니다</button></div></div>`;document.body.appendChild(ov);ov.querySelector('#cNo').onclick=()=>ov.remove();ov.querySelector('#cYes').onclick=()=>{ov.remove();submitExam();};}
+function isRight(i){const a=[...EX.ans[i]].sort().join(),b=[...QS[i].a].sort().join();return a===b;}
+async function submitExam(){if(EX.submitted)return;EX.submitted=true;clearInterval(EX.iv);$('#examView').classList.add('hide');$('#gradeView').classList.remove('hide');
+ const gp=$('#gradePaper');gp.innerHTML=`<div class="phead"><div class="t1">2026학년도 지구인 자격 고사<br>채점 결과</div><div class="t2">분리배출 영역</div><div class="t3">성명: ${esc(S.cls)} 지구인</div></div><div class="row" style="justify-content:center;gap:30px;margin-bottom:10px"><div style="font-size:22px;color:#555">점수</div><div class="scoreBig" id="scoreBig">0</div><div style="font-size:22px;color:#555">/ 100</div></div><div class="stamp" id="stamp"></div><div class="glist">${QS.map((q,i)=>`<div class="gitem" id="g${i}"><span class="gm"></span><b>${i+1}.</b> ${q.q.replace(/<[^>]+>/g,'')}<br><span style="color:#1d5fd0">내 답: ${EX.ans[i].length?EX.ans[i].sort().map(k=>NUM[k]).join(', '):'(미응답)'}</span><div class="ex">정답: <b>${q.a.map(k=>NUM[k]).join(', ')}</b> — ${q.ex}</div></div>`).join('')}</div><div id="gradeEnd"></div>`;
+ speak('채점을 시작합니다.');let score=0;
+ for(let i=0;i<QS.length;i++){await new Promise(r=>setTimeout(r,420));const ok=isRight(i),g=$('#g'+i);g.classList.add('shown',ok?'right':'wrong');g.querySelector('.gm').textContent=ok?'○':'╱';if(ok){score+=10;SFX.ok();}else SFX.bad();const sb=$('#scoreBig');if(sb)sb.textContent=score;}
+ S.exam=score;await new Promise(r=>setTimeout(r,500));const pass=score>=70;const st=$('#stamp');st.className='stamp '+(pass?'pass':'fail');st.textContent=pass?'합 격':'불합격';requestAnimationFrame(()=>st.classList.add('on'));pass?SFX.win():SFX.lose();
+ const say=pass?(score===100?'...100점이라고?! 말도 안 돼! 하, 하지만 시험은 시험일 뿐. 실제로 분리배출을 할 수 있는지 보자!':'흥, 제법이군. 지구인 자격은 인정하지. 하지만 실제로 쓰레기를 제대로 버릴 수 있을까? 크크크.'):'크크크! 역시 지구인들은 지구를 지킬 자격이 없군! ...하지만 한 번 더 기회를 주지. 실전에서 증명해 봐라!';
+ $('#gradeEnd').innerHTML=`<div class="alienSay">${alienSVG()}<div><b style="color:#86ff4f">조르크:</b> ${say}</div></div><div style="text-align:center;margin-top:16px"><button class="btn red" id="toSort">🚛 분리배출 실전 작전 시작 ▶</button></div>`;speak(say,{pitch:.1,rate:.88});
+ $('#toSort').onclick=()=>go('sort');}
+
+/* ========== SORT GAME ========== */
+const BINS=[{id:'plastic',n:'플라스틱',i:'🧴'},{id:'paper',n:'종이',i:'📦'},{id:'pack',n:'종이팩',i:'🥛'},{id:'can',n:'캔',i:'🥫'},{id:'glass',n:'유리',i:'🍾'},{id:'vinyl',n:'비닐',i:'🛍️'},{id:'general',n:'일반쓰레기\n(종량제)',i:'🗑️'},{id:'battery',n:'폐건전지',i:'🔋'},{id:'medicine',n:'폐의약품',i:'💊'}];
+const BINNAME=Object.fromEntries(BINS.map(b=>[b.id,b.n.replace('\n',' ')]));
+const TOOLS=[{id:'empty',n:'비우기',i:'🥤'},{id:'rinse',n:'헹구기',i:'🚰'},{id:'peel',n:'떼어내기',i:'✂️'},{id:'crush',n:'찌그러뜨리기',i:'👊'},{id:'wrap',n:'신문지로 싸기',i:'📰',wide:true}];
+const TOOLNAME=Object.fromEntries(TOOLS.map(t=>[t.id,t.n]));
+const ITEMS=[
+ // lv1
+ {lv:1,n:'신문지',e:'📰',bin:'paper',need:[],clean:'깨끗하고 마른 신문지 묶음',why:'깨끗한 종이는 종이류!'},
+ {lv:1,n:'다 쓴 AA 건전지',e:'🔋',bin:'battery',need:[],clean:'리모컨에서 뺀 다 쓴 건전지',why:'건전지는 폐건전지 전용 수거함!'},
+ {lv:1,n:'먹다 남은 감기약',e:'💊',bin:'medicine',need:[],clean:'유통기한이 지난 알약',why:'약은 보건소·약국의 폐의약품 수거함!'},
+ {lv:1,n:'코 푼 휴지',e:'🧻',bin:'general',need:[],clean:'콧물이 묻은 휴지',why:'휴지는 재활용이 안 돼요 → 일반 쓰레기(종량제 봉투)'},
+ {lv:1,n:'과일 포장 비닐',e:'🛍️',bin:'vinyl',need:[],clean:'사과를 싸고 있던 깨끗한 비닐',why:'깨끗한 비닐은 비닐류!'},
+ {lv:1,n:'택배 상자',e:'📦',bin:'paper',need:['peel'],ok:['crush'],t:{peel:'테이프와 송장 스티커가 붙어 있다'},why:'테이프를 떼고 종이류로!'},
+ {lv:1,n:'시계 단추 건전지',e:'⌚',bin:'battery',need:[],clean:'손목시계에서 뺀 동그란 건전지',why:'작은 건전지도 폐건전지 수거함!'},
+ {lv:1,n:'해열제 시럽',e:'🧪',bin:'medicine',need:[],clean:'먹다 남은 물약',why:'물약도 폐의약품 수거함!'},
+ {lv:1,n:'과자 봉지',e:'🍫',bin:'vinyl',need:[],clean:'과자를 다 먹고 부스러기도 탈탈 털었다',why:'이물질 없는 과자 봉지는 비닐류!'},
+ // lv2
+ {lv:2,n:'콜라 캔',e:'🥫',bin:'can',need:['empty','rinse','crush'],t:{empty:'콜라가 남아서 출렁거린다',rinse:'안쪽이 끈적끈적하다',crush:'동그랗고 빵빵해서 부피가 크다'},why:'캔은 비우고 → 헹구고 → 찌그러뜨려서 캔류!'},
+ {lv:2,n:'사이다 유리병',e:'🍾',bin:'glass',need:['empty','rinse'],t:{empty:'사이다가 남아 있다',rinse:'안쪽이 달콤하게 끈적하다'},why:'유리병은 비우고 헹궈서 유리류!'},
+ {lv:2,n:'우유팩',e:'🥛',bin:'pack',need:['empty','rinse'],ok:['crush'],t:{empty:'우유가 남아 있다',rinse:'안쪽에서 우유 냄새가 난다'},why:'우유팩은 비우고 헹궈서 종이팩 전용 수거함!'},
+ {lv:2,n:'반찬 플라스틱 통',e:'🍱',bin:'plastic',need:['empty','rinse'],t:{empty:'먹다 남은 반찬이 들어 있다',rinse:'김치 국물이 묻어 있다'},why:'반찬 통은 비우고 헹궈서 플라스틱류!'},
+ {lv:2,n:'소스 묻은 비닐봉지',e:'🛍️',bin:'vinyl',need:['rinse'],t:{rinse:'떡볶이 소스가 묻어 있다'},why:'비닐은 이물질을 없애면 비닐류! (못 없애면 일반 쓰레기)'},
+ {lv:2,n:'스프링 공책',e:'📓',bin:'paper',need:['peel'],t:{peel:'철 스프링이 달려 있다'},why:'스프링을 떼어 내면 종이류!'},
+ {lv:2,n:'기름 밴 피자 상자',e:'🍕',bin:'general',need:[],clean:'치즈와 기름이 흠뻑 배어 있다',why:'이물질이 밴 종이는 씻을 수 없어요 → 일반 쓰레기'},
+ {lv:2,n:'깨진 유리컵',e:'🍷',bin:'general',need:['wrap'],t:{wrap:'깨져서 조각이 날카롭다'},why:'깨진 유리는 신문지에 싸서 일반 쓰레기(종량제)!'},
+ {lv:2,n:'다 쓴 연고 튜브',e:'💊',bin:'medicine',need:[],clean:'상처에 바르던 연고가 조금 남은 튜브',why:'연고도 의약품! 폐의약품 수거함으로'},
+ {lv:2,n:'참치 캔',e:'🐟',bin:'can',need:['rinse'],ok:['crush','empty'],t:{rinse:'기름과 참치 부스러기가 묻어 있다'},why:'참치 캔은 기름을 헹궈서 캔류!'},
+ {lv:2,n:'잡지',e:'📚',bin:'paper',need:['peel'],t:{peel:'비닐 포장이 씌워져 있다'},why:'비닐 포장을 벗기면 종이류!'},
+ // lv3
+ {lv:3,n:'투명 생수 페트병',e:'🧴',bin:'plastic',need:['empty','peel','crush'],t:{empty:'물이 반쯤 남아 있다',peel:'비닐 라벨이 감겨 있다',crush:'빵빵하게 부풀어 부피가 크다'},why:'투명 페트병은 비우고 → 라벨 떼고 → 찌그러뜨려서!'},
+ {lv:3,n:'영수증',e:'🧾',bin:'general',need:[],clean:'반짝반짝한 감열지 영수증',why:'영수증(감열지)은 화학 물질이 코팅돼 재활용이 안 돼요 → 일반 쓰레기'},
+ {lv:3,n:'다 쓴 물티슈',e:'🧻',bin:'general',need:[],clean:'손을 닦은 물티슈',why:'물티슈는 종이가 아니라 플라스틱 섬유! → 일반 쓰레기'},
+ {lv:3,n:'로봇 장난감',e:'🤖',bin:'general',need:[],clean:'플라스틱·쇠·고무가 단단히 붙어 있다',why:'여러 재질이 섞인 플라스틱 → 일반 쓰레기'},
+ {lv:3,n:'볼펜',e:'🖊️',bin:'general',need:[],clean:'플라스틱 몸통 속에 쇠 스프링과 잉크',why:'여러 재질이 섞여 분리가 어려워요 → 일반 쓰레기'},
+ {lv:3,n:'요구르트병',e:'🍼',bin:'plastic',need:['empty','rinse','peel'],t:{empty:'요구르트가 조금 남아 있다',rinse:'안쪽이 끈적끈적하다',peel:'은박 뚜껑이 붙어 있다'},why:'비우고, 헹구고, 은박 뚜껑을 떼어 플라스틱류!'},
+ {lv:3,n:'플라스틱 음료 컵',e:'🥤',bin:'plastic',need:['empty','rinse','peel'],t:{empty:'얼음과 음료가 남아 있다',rinse:'안쪽이 달고 끈적하다',peel:'종이 홀더와 빨대가 끼워져 있다'},why:'비우고, 헹구고, 홀더·빨대를 빼서 플라스틱류!'},
+ {lv:3,n:'샴푸 통',e:'🧴',bin:'plastic',need:['empty','rinse','peel'],t:{empty:'샴푸가 조금 남아 있다',rinse:'미끌미끌 거품이 남아 있다',peel:'쇠 스프링이 든 펌프 꼭지가 달려 있다'},why:'비우고, 헹구고, 펌프를 떼어 플라스틱류!'},
+ {lv:3,n:'주스 종이팩',e:'🧃',bin:'pack',need:['empty','rinse','peel'],ok:['crush'],t:{empty:'주스가 남아 있다',rinse:'안쪽이 달고 끈적하다',peel:'플라스틱 빨대와 비닐이 붙어 있다'},why:'비우고, 헹구고, 빨대를 떼어 종이팩 수거함!'},
+ {lv:3,n:'아이스크림 비닐',e:'🍦',bin:'vinyl',need:['rinse'],t:{rinse:'녹은 아이스크림이 묻어 있다'},why:'이물질을 헹궈 없애면 비닐류!'},
+ {lv:3,n:'잼 유리병',e:'🍯',bin:'glass',need:['empty','rinse'],t:{empty:'딸기잼이 남아 있다',rinse:'안쪽이 끈적끈적하다'},why:'잼을 비우고 헹궈서 유리류!'},
+ {lv:3,n:'고무장갑',e:'🧤',bin:'general',need:[],clean:'구멍 난 고무장갑',why:'고무는 분리배출 품목이 아니에요 → 일반 쓰레기'}
+];
+const WAVES=[{n:[6,2,0],time:25,msg:'외계인이 첫 번째 쓰레기 더미를 보냈다! 차근차근 정확하게!'},{n:[3,5,2],time:18,msg:'두 번째 웨이브! 손질이 필요한 쓰레기가 많아진다. 속도도 빨라진다!'},{n:[0,4,8],time:13,msg:'마지막 웨이브! 까다로운 쓰레기가 쏟아진다. 4대 원칙을 떠올려!'}];
+const TAUNTS=['크크, 그것도 몰라?','역시 지구인은 안 돼~','지구는 곧 우리 것이다!','섞어 버리면 우리야 좋지!','하하! 또 틀렸군!'];
+const SG={};
+function sortInit(){const L=[1,2,3].map(lv=>shuffle(ITEMS.filter(x=>x.lv===lv)));SG.waves=WAVES.map(w=>{const a=[];w.n.forEach((c,li)=>{for(let k=0;k<c;k++){a.push(L[li].length?L[li].pop():pick(ITEMS.filter(x=>x.lv===li+1)));}});return shuffle(a);});
+ Object.assign(SG,{w:0,score:0,combo:0,maxCombo:0,correct:0,total:0,hp:100,queue:[],cur:null,paused:true,raf:0,last:0});}
+ENTER.sort=()=>{sortInit();buildSortUI();hudUpd();waveIntro();};
+LEAVE.sort=()=>{cancelAnimationFrame(SG.raf);SG.paused=true;$$('.overlay').forEach(o=>o.remove());};
+function buildSortUI(){
+ $('#bins').innerHTML=BINS.map(b=>`<div class="bin" data-bin="${b.id}" style="background:${binCol[b.id]}"><div class="lid"></div><div class="bi">${b.i}</div><div class="bn">${b.n}</div></div>`).join('');
+ $$('#bins .bin').forEach(b=>b.onclick=()=>{if(!SG.paused&&SG.cur)dropTo(b.dataset.bin,b);});
+ $('#tools').innerHTML='<h4>🧰 손질 도구</h4>'+TOOLS.map(t=>`<button class="tool ${t.wide?'wide':''}" data-t="${t.id}"><span class="ic">${t.i}</span>${t.n}</button>`).join('');
+ $$('#tools .tool').forEach(b=>b.onclick=()=>useTool(b.dataset.t));}
+function hudUpd(){$('#sWave').textContent=`WAVE ${SG.w+1}/3`;$('#sScore').textContent=`⭐ ${SG.score}점`;$('#sCombo').textContent=`🔥 콤보 ${SG.combo}`;$('#sLeft').textContent=`남은 쓰레기 ${SG.queue.length+(SG.cur?1:0)}`;$('#sHp').style.width=SG.hp+'%';$('#sHp').style.background=SG.hp>50?'linear-gradient(90deg,#39ff9f,#3aa0ff)':SG.hp>25?'linear-gradient(90deg,#ffd54a,#ff9a3d)':'linear-gradient(90deg,#ff3b5c,#ff7a8e)';$('#sHpT').textContent=`🛡️ 지구 보호막 ${SG.hp}%`;
+ $('#conveyor').innerHTML='<h4>🚚 다음 쓰레기</h4>'+SG.queue.slice(0,6).map(it=>`<div class="qitem"><span class="e">${it.e}</span>${it.n}</div>`).join('');}
+function waveIntro(){SG.paused=true;const w=WAVES[SG.w];const ov=document.createElement('div');ov.className='overlay';ov.innerHTML=`<div class="panel ovBox"><div style="font-size:64px">🛸🗑️🗑️🗑️</div><h2>WAVE ${SG.w+1}</h2><p>${w.msg}<br><span style="color:#ffd54a">쓰레기 ${SG.waves[SG.w].length}개 · 한 개당 ${w.time}초</span></p>${SG.w===0?`<p style="font-size:18px;text-align:left;background:rgba(255,255,255,.05);padding:12px 16px;border-radius:12px">📌 <b>작전 규칙</b><br>① 쓰레기 상태를 읽고 <b>손질 도구</b>로 준비해요 (비우기·헹구기·떼어내기·찌그러뜨리기·신문지로 싸기)<br>② 순서도 중요! 내용물이 있는데 헹구거나 찌그러뜨리면 쏟아져요<br>③ 필요 없는 손질을 하면 점수가 깎여요<br>④ 손질을 덜 했거나 수거함을 틀리면 보호막이 깎여요<br>⑤ 시간 안에 못 버리면 쓰레기가 땅에 떨어져요!</p>`:''}<button class="btn red">작전 개시 ▶</button></div>`;document.body.appendChild(ov);speak(`웨이브 ${SG.w+1}. ${w.msg}`,{pitch:.15,rate:.9});
+ ov.querySelector('button').onclick=()=>{ov.remove();SG.queue=[...SG.waves[SG.w]];SG.paused=false;nextItem();SG.last=performance.now();cancelAnimationFrame(SG.raf);SG.raf=requestAnimationFrame(sortLoop);};}
+function nextItem(){if(!SG.queue.length){SG.cur=null;hudUpd();endWave();return;}const it=SG.queue.shift();SG.cur={...it,done:[],tMax:WAVES[SG.w].time,tl:WAVES[SG.w].time};const ce=$('#curItem');ce.className='curItem';void ce.offsetWidth;ce.classList.add('enter');$('#curE').textContent=it.e;renderCur();hudUpd();SFX.pop();}
+function renderCur(){const c=SG.cur;if(!c)return;$('#curN').textContent=c.n;const rem=c.need.filter(n=>!c.done.includes(n));
+ let st='';if(!c.need.length)st=`🔎 ${c.clean}`;else if(rem.length)st=rem.map(n=>`⚠️ ${c.t[n]}`).join('<br>');else st='<span class="okl">✨ 손질 완료! 이제 알맞은 수거함으로!</span>';
+ $('#curS').innerHTML=st;$('#curD').innerHTML=c.done.map(d=>`<span>${TOOLNAME[d]} ✓</span>`).join('');
+ const ce=$('#curItem');ce.classList.toggle('crushed',c.done.includes('crush'));ce.classList.toggle('wrapped',c.done.includes('wrap'));}
+function sortLoop(now){const dt=Math.min(.1,(now-SG.last)/1000);SG.last=now;if(!SG.paused&&SG.cur){SG.cur.tl-=dt;const p=Math.max(0,SG.cur.tl/SG.cur.tMax);$('#curT').style.width=(p*100)+'%';if(SG.cur.tl<=5&&Math.floor(SG.cur.tl*2)!==Math.floor((SG.cur.tl+dt)*2))SFX.tick();if(SG.cur.tl<=0){timeoutItem();}}SG.raf=requestAnimationFrame(sortLoop);}
+function useTool(tid){if(SG.paused||!SG.cur)return;const c=SG.cur;
+ if(c.done.includes(tid)){toast('이미 했어요!');return;}
+ const needEmpty=c.need.includes('empty')&&!c.done.includes('empty');
+ if(needEmpty&&(tid==='rinse'||tid==='crush')){SFX.bad();SG.score=Math.max(0,SG.score-30);SG.combo=0;c.tl=Math.max(.5,c.tl-2);toast(tid==='rinse'?'💦 내용물부터 비워야죠! 음료가 섞여 버렸어요 (-30점)':'💥 내용물이 남은 채로 찌그러뜨려서 쏟아졌어요! (-30점)',true);flashWork();hudUpd();return;}
+ if(!c.need.includes(tid)&&!(c.ok||[]).includes(tid)){SFX.bad();SG.score=Math.max(0,SG.score-20);SG.combo=0;c.tl=Math.max(.5,c.tl-2);const msg={rinse:'씻을 필요가 없거나, 씻으면 안 되는 쓰레기예요!',empty:'비울 내용물이 없어요!',peel:'떼어낼 것이 없어요!',crush:'찌그러뜨릴 필요가 없어요!',wrap:'신문지로 쌀 필요가 없어요!'}[tid];toast(`🙅 ${msg} 시간 낭비! (-20점)`,true);flashWork();hudUpd();return;}
+ c.done.push(tid);tid==='crush'?SFX.crush():SFX.tool();const ce=$('#curItem');ce.classList.remove('sparkle');void ce.offsetWidth;ce.classList.add('sparkle');renderCur();}
+function flashWork(){const w=$('#work');w.style.boxShadow='0 0 0 3px #ff3b5c,0 0 30px #ff3b5c';setTimeout(()=>w.style.boxShadow='',500);}
+function dropTo(binId,binEl){if(SG.paused||!SG.cur)return;const c=SG.cur;SG.total++;const rem=c.need.filter(n=>!c.done.includes(n));const binOk=binId===c.bin;
+ binEl=binEl||$(`.bin[data-bin="${binId}"]`);binEl.classList.add('open');setTimeout(()=>binEl.classList.remove('open'),500);
+ if(binOk&&!rem.length){SG.correct++;SG.combo++;SG.maxCombo=Math.max(SG.maxCombo,SG.combo);const gain=100+Math.round(c.tl/c.tMax*50)+Math.min(SG.combo-1,10)*15;SG.score+=gain;SFX.ok();binEl.classList.remove('okflash');void binEl.offsetWidth;binEl.classList.add('okflash');
+  showFb(true,`<div class="big">⭕ 정답! +${gain}</div>${SG.combo>=3?`🔥 ${SG.combo}콤보!<br>`:''}${c.why}`,1300);}
+ else{SG.combo=0;SG.hp=Math.max(0,SG.hp-7);SFX.bad();binEl.classList.remove('badflash');void binEl.offsetWidth;binEl.classList.add('badflash');
+  let reason=!binOk?`<b>${BINNAME[binId]}</b> 수거함이 아니에요!`:`수거함은 맞았지만 <b>${rem.map(r=>TOOLNAME[r]).join(', ')}</b>을(를) 안 했어요!`;
+  showFb(false,`<div class="big">❌ 땡!</div>${reason}<br><span style="color:#7dffbf">정답: ${c.need.length?c.need.map(r=>TOOLNAME[r]).join(' → ')+' → ':''}${BINNAME[c.bin]}</span><br><span style="font-size:19px;color:#cfe0ff">${c.why}</span>`,3600);taunt();}
+ SG.cur=null;hudUpd();}
+function timeoutItem(){const c=SG.cur;SG.total++;SG.combo=0;SG.hp=Math.max(0,SG.hp-9);SFX.bad();SG.cur=null;showFb(false,`<div class="big">⏰ 시간 초과!</div>쓰레기가 땅에 떨어졌어요... 지구가 아파해요!<br><span style="color:#7dffbf">정답: ${c.need.length?c.need.map(r=>TOOLNAME[r]).join(' → ')+' → ':''}${BINNAME[c.bin]}</span><br><span style="font-size:19px;color:#cfe0ff">${c.why}</span>`,3400);taunt();hudUpd();}
+function taunt(){const w=$('#work');const d=document.createElement('div');d.className='taunt';d.textContent='👽 '+pick(TAUNTS);w.appendChild(d);setTimeout(()=>d.remove(),2200);}
+function showFb(ok,html,ms){SG.paused=true;const w=$('#work');const f=document.createElement('div');f.className='fb';f.innerHTML=`<div class="fbBox ${ok?'':'bad'}">${html}<div style="font-size:14px;color:#9fb6e8;margin-top:6px">(클릭하면 바로 다음)</div></div>`;w.appendChild(f);let done=false;const fin=()=>{if(done)return;done=true;f.remove();if(SG.hp<=0){shieldBroken();return;}SG.paused=false;nextItem();};f.onclick=fin;setTimeout(fin,ms);}
+function shieldBroken(){SG.paused=true;SFX.lose();const ov=document.createElement('div');ov.className='overlay';ov.innerHTML=`<div class="panel ovBox"><div style="font-size:70px">💥🛡️💥</div><h2 style="color:#ff5370">보호막 붕괴!</h2><p>외계인들이 웃고 있어요... 크크크!<br>4대 원칙(비운다·헹군다·분리한다·섞지 않는다)을 다시 떠올려 봐요.</p><div class="row"><button class="btn red sm" id="rw">이 웨이브 다시 도전</button><button class="btn ghost sm" id="cw">보호막 수리하고 계속</button></div></div>`;document.body.appendChild(ov);
+ ov.querySelector('#rw').onclick=()=>{ov.remove();SG.hp=60;SG.queue=[];SG.cur=null;waveIntro();};ov.querySelector('#cw').onclick=()=>{ov.remove();SG.hp=40;hudUpd();SG.paused=false;nextItem();};}
+function endWave(){SG.paused=true;if(SG.w<WAVES.length-1){SG.w++;SFX.win();setTimeout(waveIntro,500);}else sortResult();}
+function sortResult(){cancelAnimationFrame(SG.raf);const acc=SG.total?Math.round(SG.correct/SG.total*100):0;S.sort={score:SG.score,acc,correct:SG.correct,total:SG.total,maxCombo:SG.maxCombo};SFX.win();
+ const rank=acc>=90?['🏆 분리배출 마스터','외계인들이 입을 다물지 못한다!']:acc>=75?['🥇 분리배출 고수','조르크가 당황하기 시작했다!']:acc>=55?['🥈 분리배출 견습생','조금만 더 연습하면 완벽해요!']:['🥉 분리배출 새내기','4대 원칙을 다시 복습해 봐요!'];
+ const ov=document.createElement('div');ov.className='overlay';ov.innerHTML=`<div class="panel ovBox"><div style="font-size:60px">♻️</div><h2>${rank[0]}</h2><p>${rank[1]}</p><div class="row" style="gap:12px;flex-wrap:wrap;justify-content:center;font-size:22px"><div class="hud"><div class="chip">⭐ ${SG.score}점</div><div class="chip">🎯 정확도 ${acc}% (${SG.correct}/${SG.total})</div><div class="chip">🔥 최고 콤보 ${SG.maxCombo}</div><div class="chip">🛡️ 보호막 ${SG.hp}%</div></div></div><div class="alienSay" style="text-align:left">${alienSVG()}<div><b style="color:#86ff4f">조르크:</b> 으음... 쓰레기 버리는 법은 알았다 치자. 하지만 애초에 쓰레기를 펑펑 만드는 건 어쩔 거지? 너희 반이 무엇을 실천할 수 있는지 보여 봐라!</div></div><div class="row"><button class="btn ghost sm" id="sAgain">다시 도전</button><button class="btn" id="sNext">🧠 작전 회의실로 ▶</button></div></div>`;document.body.appendChild(ov);speak('으음. 쓰레기 버리는 법은 알았다 치자. 하지만 애초에 쓰레기를 펑펑 만드는 건 어쩔 거지?',{pitch:.1,rate:.9});
+ ov.querySelector('#sAgain').onclick=()=>{ov.remove();ENTER.sort();};ov.querySelector('#sNext').onclick=()=>{ov.remove();go('discuss');};}
+/* drag */
+(function(){const ce=$('#curItem');let g=null,hot=null;
+ ce.addEventListener('pointerdown',e=>{if(SG.paused||!SG.cur)return;e.preventDefault();ce.setPointerCapture(e.pointerId);g=document.createElement('div');g.className='dragGhost';g.textContent=SG.cur.e;if(SG.cur.done.includes('crush'))g.style.transform='translate(-50%,-50%) scale(.65,.85) rotate(-12deg)';document.body.appendChild(g);mv(e);ce.style.opacity='.3';});
+ function mv(e){if(!g)return;g.style.left=e.clientX+'px';g.style.top=e.clientY+'px';const el=document.elementFromPoint(e.clientX,e.clientY);const b=el&&el.closest('.bin');if(b!==hot){hot&&hot.classList.remove('hot');hot=b;hot&&hot.classList.add('hot');}}
+ ce.addEventListener('pointermove',mv);
+ function up(e){if(!g)return;g.remove();g=null;ce.style.opacity='';if(hot){hot.classList.remove('hot');const b=hot;hot=null;dropTo(b.dataset.bin,b);}}
+ ce.addEventListener('pointerup',up);ce.addEventListener('pointercancel',up);})();
+
+/* ========== DISCUSS ========== */
+const CATS=['줄이기','다시 쓰기','분리배출'];
+const FRIENDS={'새싹이':{e:'🌱',c:'#2e7d32'},'꼼꼼이':{e:'🔍',c:'#1565c0'},'쩝쩝이':{e:'🐙',c:'#8e24aa'}};
+const DEF_CARDS=[['일회용품 사용 줄이기',0],['양치컵 사용하기',0],['급식 먹을 만큼 받기',0],['개인 물병 사용하기',0],['손수건 사용하기',0],['물휴지 사용 줄이기',0],['학용품 아껴 쓰기',0],['비닐봉지 쓰지 않기',0],['종이 뒷면도 쓰기',1],['분리배출 잘하기',2]];
+const KW=[
+ {k:['양치','컵'],c:'양치컵 사용하기',g:0},{k:['물병','텀블러','개인컵','개인 컵'],c:'개인 물병 사용하기',g:0},{k:['이면지','뒷면','연습장'],c:'종이 뒷면도 쓰기',g:1},
+ {k:['급식','잔반','남기','음식'],c:'급식 먹을 만큼 받기',g:0},{k:['비닐','봉지'],c:'비닐봉지 쓰지 않기',g:0},{k:['물티슈','물휴지'],c:'물휴지 사용 줄이기',g:0},
+ {k:['손수건','휴지','티슈'],c:'손수건 사용하기',g:0},{k:['학용품','연필','지우개','아껴','크레파스','색연필'],c:'학용품 아껴 쓰기',g:0},{k:['분리','재활용','버리'],c:'분리배출 잘하기',g:2},
+ {k:['나눔','물려','바꿔','바자회','중고'],c:'안 쓰는 물건 나눔하기',g:1},{k:['장바구니','에코백'],c:'장바구니 사용하기',g:0},{k:['우유'],c:'우유팩 씻어서 모으기',g:2},
+ {k:['페트','라벨'],c:'페트병 라벨 떼기',g:2},{k:['일회용','빨대','배달'],c:'일회용품 사용 줄이기',g:0},{k:['포장','과대'],c:'포장 적은 물건 사기',g:0},{k:['상자','박스','만들기'],c:'상자로 만들기 하기',g:1},
+ {k:['당번','검사','도우미'],c:'분리배출 당번 정하기',g:2},{k:['종이','a4','A4','프린트'],c:'종이 아껴 쓰기',g:0},{k:['물'],c:'물 잠그고 양치하기',g:0}
+];
+const DC={msgs:[],busy:false,ai:null,aiTried:false};
+let sampleP=null;function getSample(){if(!sampleP){sampleP=(window.claude&&typeof window.claude.use==='function')?Promise.race([window.claude.use('sample'),new Promise(r=>setTimeout(()=>r(null),10000))]).catch(()=>null):Promise.resolve(null);}return sampleP;}
+getSample().then(s=>{DC.ai=s;$('#aiMode').textContent=s?'🟢 AI 연결됨':'🟡 기본 모드';});
+ENTER.discuss=()=>{renderCards();if(!DC.msgs.length){const intro=[['새싹이',`안녕, ${S.cls} 지구인들! 🌱 조르크가 "쓰레기를 펑펑 만든다"고 했잖아. 우리 반에서 쓰레기를 줄일 방법을 같이 찾아보자!`],['꼼꼼이','줄이기, 다시 쓰기, 분리배출 이렇게 세 가지로 나눠서 생각해 보면 좋아. 실제로 우리 교실에서 매일 할 수 있는 걸로! 🔍'],['쩝쩝이','나는 급식 시간 담당~ 🐙 아무 의견이나 편하게 말해 봐! 좋은 의견은 실천 카드로 만들어 줄게!']];intro.forEach((m,i)=>setTimeout(()=>addMsg(m[0],m[1]),400+i*900));}
+ $('#quick').innerHTML=['양치할 때 컵을 써요','종이를 아껴 써요','급식을 남기지 않아요','물티슈 대신 손수건','안 쓰는 물건 나누기'].map(q=>`<button>${q}</button>`).join('');$$('#quick button').forEach(b=>b.onclick=()=>{$('#chatIn').value=b.textContent;sendChat();});setTimeout(()=>$('#chatIn').focus(),300);};
+function addMsg(who,text,card){const isMe=who==='me';DC.msgs.push({who,text});const f=FRIENDS[who];const d=document.createElement('div');d.className='msg'+(isMe?' me':'');
+ d.innerHTML=isMe?`<div class="b">${esc(text)}</div>`:`<div class="a" style="background:${f.c}">${f.e}</div><div><div class="n">${who}</div><div class="b">${esc(text)}${card?`<br><button class="addc">📌 「${esc(card.text)}」 카드로 추가</button>`:''}</div></div>`;
+ if(card){d.querySelector('.addc').onclick=e=>{if(addCard(card.text,card.g)){e.target.disabled=true;e.target.textContent='✅ 카드 추가됨';}};}
+ $('#msgs').appendChild(d);$('#msgs').scrollTop=1e9;if(!isMe)SFX.pop();}
+function addCard(text,g){text=String(text).trim().slice(0,14);if(!text)return false;if(S.cards.some(c=>c.text.replace(/\s/g,'')===text.replace(/\s/g,''))){toast('이미 있는 카드예요!');return false;}S.cards.push({text,g:clamp(+g||0,0,2)});renderCards();SFX.ok();return true;}
+function renderCards(){$('#cats').innerHTML=CATS.map((c,i)=>`<div class="cat c${i}"><div class="ch"><span>${['🔻','🔁','♻️'][i]} ${c}</span><span>${S.cards.filter(x=>x.g===i).length}</span></div><ul>${S.cards.map((x,j)=>x.g===i?`<li>${esc(x.text)}<button data-j="${j}">✕</button></li>`:'').join('')}</ul></div>`).join('');$$('#cats li button').forEach(b=>b.onclick=()=>{S.cards.splice(+b.dataset.j,1);renderCards();});$('#cardCount').textContent=S.cards.length+'개';$('#toAlk').disabled=S.cards.length<4;$('#toAlk').textContent=S.cards.length<4?`카드 ${4-S.cards.length}개 더 필요해요`:'이 카드로 알까기판 만들기 ▶';}
+$('#chatForm').onsubmit=e=>{e.preventDefault();sendChat();};
+$('#manualForm').onsubmit=e=>{e.preventDefault();if(addCard($('#manualIn').value,+$('#manualCat').value))$('#manualIn').value='';};
+$('#fillCards').onclick=()=>{for(const [t,g] of DEF_CARDS){if(S.cards.length>=10)break;if(!S.cards.some(c=>c.text===t))S.cards.push({text:t,g});}renderCards();SFX.ok();};
+$('#toAlk').onclick=()=>go('alkkagi');
+async function sendChat(){const t=$('#chatIn').value.trim();if(!t||DC.busy)return;$('#chatIn').value='';addMsg('me',t);DC.busy=true;$('#typing').classList.remove('hide');
+ let res=null;if(DC.ai){try{res=await aiReply(t);}catch(e){if(e&&e.code==='not_granted'){DC.ai=null;$('#aiMode').textContent='🟡 기본 모드';}res=null;}}
+ if(!res)res=localReply(t);await new Promise(r=>setTimeout(r,res._local?900:200));$('#typing').classList.add('hide');
+ const reps=(res.replies||[]).slice(0,3);for(let i=0;i<reps.length;i++){const r=reps[i];const who=FRIENDS[r.who]?r.who:Object.keys(FRIENDS)[i%3];const isLast=i===reps.length-1;addMsg(who,String(r.text||'').slice(0,160),isLast&&res.card&&res.card.text?{text:res.card.text,g:Math.max(0,CATS.indexOf(res.card.category)>=0?CATS.indexOf(res.card.category):(res.card.category==='다시쓰기'?1:0))}:null);if(!isLast)await new Promise(r=>setTimeout(r,800));}
+ DC.busy=false;}
+async function aiReply(t){const hist=DC.msgs.slice(-10).map(m=>(m.who==='me'?'학생':m.who)+': '+m.text).join('\n');
+ const prompt=`너는 한국 초등학교 도덕 수업("지구를 보호하는 작은 실천")에서 학생들과 토의하는 AI 친구 3명을 동시에 연기한다.
+- 새싹이(🌱): 다정하게 칭찬하고 의견을 더 좋게 넓혀 준다.
+- 꼼꼼이(🔍): "언제, 어떻게, 누가" 실천할지 구체적으로 묻거나 실천 가능성을 따져 본다.
+- 쩝쩝이(🐙): 장난스럽고 재미있게, 가끔 다른 관점이나 살짝 반대 의견을 낸다.
+주제: 우리 반 교실에서 쓰레기를 줄이는 실천 (줄이기 / 다시 쓰기 / 분리배출).
+규칙: 초등학생 눈높이의 쉬운 반말, 다정하고 짧게(각 70자 이내), 이모지 1개 정도. 학생 의견에 직접 반응할 것. 주제와 상관없거나 장난스러운 말이면 부드럽게 주제로 돌린다. 위험하거나 부적절한 내용은 다루지 않는다.
+학생 의견이 실천 가능한 행동이면 card에 실천 카드를 만든다: text는 "~하기" 형태의 짧은 문구(공백 포함 14자 이내), category는 "줄이기","다시 쓰기","분리배출" 중 하나. 이미 있는 카드와 겹치거나 행동이 아니면 card는 null.
+이미 있는 카드: ${S.cards.map(c=>c.text).join(', ')||'(없음)'}
+최근 대화:
+${hist}
+
+반드시 JSON 하나만 출력: {"replies":[{"who":"새싹이|꼼꼼이|쩝쩝이","text":"..."}],"card":{"text":"...","category":"..."} 또는 null}
+replies는 2~3개, 서로 다른 친구가 말한다.`;
+ let v=null;if(typeof DC.ai.json==='function'){v=await DC.ai.json(prompt,{modelTier:'quick',cache:false});}else{const r=await DC.ai(prompt,{modelTier:'quick',cache:false});const m=String(r.text||'').match(/\{[\s\S]*\}/);v=m?JSON.parse(m[0]):null;}
+ if(!v||!Array.isArray(v.replies)||!v.replies.length)return null;return v;}
+function localReply(t){const hit=KW.find(k=>k.k.some(w=>t.includes(w)));const r={_local:true,replies:[],card:null};
+ if(hit){const card={text:hit.c,category:CATS[hit.g]};const dup=S.cards.some(c=>c.text===hit.c);
+  r.replies.push({who:'새싹이',text:pick([`우와, 좋은 생각이야! 🌱 "${hit.c}"(으)로 쓰레기를 확 줄일 수 있겠다!`,`멋지다! 그렇게 하면 우리 반 쓰레기통이 훨씬 가벼워질 거야 🌱`,`최고의 아이디어! 지구가 고마워할 거야 🌍`])});
+  r.replies.push({who:'꼼꼼이',text:pick(['그럼 언제 실천하면 좋을까? 매일 같은 시간에 하면 습관이 될 거야 🔍','모두가 지킬 수 있도록 우리 반 약속으로 정해 보면 어때? 🔍','누가 잘 지키는지 서로 응원해 주면 더 오래 할 수 있겠다 🔍'])});
+  if(Math.random()<.7)r.replies.push({who:'쩝쩝이',text:pick(['오! 그거 하면 조르크가 엄청 당황하겠는데? 🐙','나도 같이 할래! 문어 다리 8개로 두 배 열심히~ 🐙','재밌겠다! 일주일 동안 해 보고 얼마나 줄었는지 세어 보자 🐙'])});
+  if(!dup)r.card=card;else r.replies.push({who:'꼼꼼이',text:'이건 이미 실천 카드에 있어! 다른 방법도 생각해 볼까? 🔍'});}
+ else{r.replies.push({who:'새싹이',text:'의견 고마워! 🌱 조금 더 구체적으로 말해 줄래? 예를 들면 "무엇을, 어떻게" 할지!'});r.replies.push({who:'쩝쩝이',text:pick(['힌트! 교실에서 매일 버리는 게 뭐가 있을까? 종이, 휴지, 우유팩… 🐙','힌트! 급식 시간이나 양치 시간을 떠올려 봐 🐙','힌트! 안 쓰는 물건을 버리지 않고 다시 쓰는 방법도 있어 🐙'])});
+  if(t.length>=4&&t.length<=20&&/(기|자|요|다)$/.test(t)){const txt=t.replace(/[.!?~]+$/,'').slice(0,14);r.card={text:txt,category:'줄이기'};r.replies.push({who:'꼼꼼이',text:'이것도 실천 카드로 만들어 둘까? 필요하면 아래 버튼을 눌러 🔍'});}}
+ return r;}
+
+/* ========== ALKKAGI ========== */
+const BAD=['일회용컵 펑펑','쓰레기 섞어 버리기','급식 왕창 남기기','물 틀어 놓고 양치','학용품 막 쓰기','비닐봉지 마구 쓰기','휴지 펑펑 뽑기','라벨 안 떼고 버리기','종이 한 번 쓰고 버리기','물티슈 마구 쓰기'];
+const AK={stones:[],turn:'earth',mode:'ai',moving:false,drag:null,shot:false,aiAim:null,over:false,raf:0,last:0,msgs:[]};
+const BD={x0:40,y0:40,x1:760,y1:760};
+const cv=$('#alkCv'),cx=cv.getContext('2d');
+ENTER.alkkagi=()=>{if(S.cards.length<4){for(const [t,g] of DEF_CARDS){if(S.cards.length>=6)break;if(!S.cards.some(c=>c.text===t))S.cards.push({text:t,g});}}alkSetup();cancelAnimationFrame(AK.raf);AK.last=performance.now();AK.raf=requestAnimationFrame(alkLoop);};
+LEAVE.alkkagi=()=>{cancelAnimationFrame(AK.raf);clearTimeout(AK.aiT);};
+function alkSetup(){const n=clamp(S.cards.length,4,7);const eL=shuffle(S.cards).slice(0,n).map(c=>c.text);const aL=shuffle(BAD).slice(0,n);AK.stones=[];const R=40;
+ const place=(labels,team,yA,yB)=>{const row1=Math.ceil(labels.length/2),row2=labels.length-row1;labels.forEach((l,i)=>{const inRow1=i<row1,cnt=inRow1?row1:row2,idx=inRow1?i:i-row1;const span=600;const x=400-span/2+span*(idx+.5)/cnt+rnd(-6,6);AK.stones.push({x,y:(inRow1?yA:yB)+rnd(-5,5),vx:0,vy:0,r:R,team,label:l,alive:true,fall:0});});};
+ place(eL,'earth',650,560);place(aL,'alien',150,240);AK.turn='earth';AK.over=false;AK.shot=false;AK.drag=null;AK.aiAim=null;AK.msgs=[];clearTimeout(AK.aiT);updAlkSide();}
+function updAlkSide(){const t=$('#alkTurn');if(AK.over){t.className='turn '+(AK.over==='earth'?'earth':'alien');t.textContent=AK.over==='earth'?'🎉 지구인 승리!':'👽 외계인 승리...';}else{t.className='turn '+AK.turn;t.textContent=AK.turn==='earth'?'🌍 지구인 차례':(AK.mode==='ai'?'👽 외계인 차례 (생각 중…)':'👽 외계인 모둠 차례');}
+ $('#alkE').innerHTML=AK.stones.filter(s=>s.team==='earth').map(s=>`<div class="${s.alive?'':'x'}">● ${esc(s.label)}</div>`).join('');$('#alkA').innerHTML=AK.stones.filter(s=>s.team==='alien').map(s=>`<div class="${s.alive?'':'x'}">● ${esc(s.label)}</div>`).join('');}
+$$('#alkMode button').forEach(b=>b.onclick=()=>{$$('#alkMode button').forEach(x=>x.classList.toggle('on',x===b));AK.mode=b.dataset.m;alkSetup();});
+$('#alkReset').onclick=()=>alkSetup();$('#toSigns').onclick=()=>go('signs');
+function cvPt(e){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*800,y:(e.clientY-r.top)/r.height*800};}
+function humanTurn(){return AK.turn==='earth'||AK.mode==='pvp';}
+cv.addEventListener('pointerdown',e=>{if(AK.over||AK.moving||AK.shot||!humanTurn())return;const p=cvPt(e);const s=AK.stones.find(s=>s.alive&&!s.fall&&s.team===AK.turn&&Math.hypot(s.x-p.x,s.y-p.y)<s.r+8);if(!s)return;cv.setPointerCapture(e.pointerId);AK.drag={s,x:p.x,y:p.y};SFX.click();});
+cv.addEventListener('pointermove',e=>{if(!AK.drag)return;const p=cvPt(e);AK.drag.x=p.x;AK.drag.y=p.y;});
+function release(){if(!AK.drag)return;const d=AK.drag;AK.drag=null;let dx=d.s.x-d.x,dy=d.s.y-d.y;const len=Math.hypot(dx,dy);if(len<18)return;const pw=Math.min(len,230)/230;dx/=len;dy/=len;fire(d.s,dx,dy,pw);}
+cv.addEventListener('pointerup',release);cv.addEventListener('pointercancel',()=>AK.drag=null);
+function fire(s,dx,dy,pw){const v=250+pw*1350;s.vx=dx*v;s.vy=dy*v;AK.shot=true;AK.moving=true;SFX.knock(.25+pw*.2);}
+function distToEdge(x,y,dx,dy){let t=1e9;if(dx>0)t=Math.min(t,(BD.x1-x)/dx);if(dx<0)t=Math.min(t,(BD.x0-x)/dx);if(dy>0)t=Math.min(t,(BD.y1-y)/dy);if(dy<0)t=Math.min(t,(BD.y0-y)/dy);return t;}
+function segDist(px,py,ax,ay,bx,by){const vx=bx-ax,vy=by-ay,w=((px-ax)*vx+(py-ay)*vy)/(vx*vx+vy*vy);const t=clamp(w,0,1);return Math.hypot(px-(ax+vx*t),py-(ay+vy*t));}
+function aiPlan(){const mine=AK.stones.filter(s=>s.alive&&s.team==='alien'),tg=AK.stones.filter(s=>s.alive&&s.team==='earth');let best=null;
+ for(const a of mine)for(const e of tg){const dx=e.x-a.x,dy=e.y-a.y,d=Math.hypot(dx,dy);const ux=dx/d,uy=dy/d;const blocked=AK.stones.some(o=>o.alive&&o!==a&&o!==e&&segDist(o.x,o.y,a.x,a.y,e.x,e.y)<o.r+a.r-4);if(blocked)continue;const edge=distToEdge(e.x,e.y,ux,uy);const sc=-d*.5-edge*1.1+rnd(0,60);if(!best||sc>best.sc)best={a,ux,uy,d,edge,sc};}
+ if(!best){const a=pick(mine),e=tg.reduce((m,s)=>Math.hypot(s.x-a.x,s.y-a.y)<Math.hypot(m.x-a.x,m.y-a.y)?s:m,tg[0]);const dx=e.x-a.x,dy=e.y-a.y,d=Math.hypot(dx,dy);best={a,ux:dx/d,uy:dy/d,d,edge:200};}
+ const ang=Math.atan2(best.uy,best.ux)+rnd(-.075,.075);const pw=clamp((best.d*.9+best.edge*1.2+200)/1350,.35,1);return{a:best.a,dx:Math.cos(ang),dy:Math.sin(ang),pw,t:0};}
+function alkLoop(now){const dt=Math.min(.033,(now-AK.last)/1000);AK.last=now;for(let k=0;k<3;k++)alkPhys(dt/3);alkDraw(now);
+ if(AK.shot){const mv=AK.stones.some(s=>s.alive&&(Math.abs(s.vx)+Math.abs(s.vy)>0||s.fall));if(!mv){AK.shot=false;AK.moving=false;endAlkTurn();}}
+ if(AK.aiAim){AK.aiAim.t+=dt;if(AK.aiAim.t>.9){const a=AK.aiAim;AK.aiAim=null;if(a.a.alive)fire(a.a,a.dx,a.dy,a.pw);else endAlkTurn();}}
+ AK.raf=requestAnimationFrame(alkLoop);}
+function alkPhys(dt){const st=AK.stones;for(const s of st){if(!s.alive)continue;if(s.fall){s.fall+=dt;s.x+=s.vx*dt*.4;s.y+=s.vy*dt*.4;if(s.fall>.6){s.alive=false;s.fall=0;s.vx=s.vy=0;updAlkSide();}continue;}
+ s.x+=s.vx*dt;s.y+=s.vy*dt;const sp=Math.hypot(s.vx,s.vy);if(sp>0){const ns=Math.max(0,sp-(230+sp*.95)*dt);if(ns<6){s.vx=s.vy=0;}else{s.vx*=ns/sp;s.vy*=ns/sp;}}
+ if(s.x<BD.x0||s.x>BD.x1||s.y<BD.y0||s.y>BD.y1){s.fall=.001;SFX.pop();alkMsg(s);}}
+ for(let i=0;i<st.length;i++){const a=st[i];if(!a.alive||a.fall)continue;for(let j=i+1;j<st.length;j++){const b=st[j];if(!b.alive||b.fall)continue;const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy),md=a.r+b.r;if(d<md&&d>0){const nx=dx/d,ny=dy/d,ov=(md-d)/2;a.x-=nx*ov;a.y-=ny*ov;b.x+=nx*ov;b.y+=ny*ov;const dvn=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;if(dvn>0){const imp=dvn*(1+.9)/2;a.vx-=imp*nx;a.vy-=imp*ny;b.vx+=imp*nx;b.vy+=imp*ny;SFX.knock(Math.min(.35,dvn/2500));}}}}}
+function alkMsg(s){const m=s.team==='alien'?`💥 나쁜 습관 「${s.label}」 퇴치!`:`😱 「${s.label}」 알이 밀려났다!`;toast(m,s.team==='earth');AK.msgs.push({t:performance.now(),m,team:s.team});}
+function endAlkTurn(){const e=AK.stones.filter(s=>s.alive&&s.team==='earth').length,a=AK.stones.filter(s=>s.alive&&s.team==='alien').length;
+ if(!e||!a){AK.over=a?'alien':'earth';if(!e&&!a)AK.over='earth';updAlkSide();if(AK.over==='earth'){SFX.win();S.alkWinner='earth';speak('지구인 승리! 나쁜 습관을 모두 몰아냈어요!');toast('🎉 지구인 승리! 나쁜 습관을 모두 몰아냈다!');}else{SFX.lose();S.alkWinner='alien';speak('크크크, 우리 나쁜 습관이 이겼다!',{pitch:.1});toast('👽 외계인 승리… 다시 도전해 보자!',true);}return;}
+ AK.turn=AK.turn==='earth'?'alien':'earth';updAlkSide();if(AK.turn==='alien'&&AK.mode==='ai'){clearTimeout(AK.aiT);AK.aiT=setTimeout(()=>{if(cur!=='alkkagi'||AK.over)return;AK.aiAim=aiPlan();},800);}}
+function wrapLines(ctx,text,maxW,maxL){const lines=[];let line='';const push=w=>{const t=line?line+' '+w:w;if(ctx.measureText(t).width<=maxW){line=t;return;}if(line){lines.push(line);line='';}if(ctx.measureText(w).width<=maxW){line=w;return;}let part='';for(const ch of w){if(ctx.measureText(part+ch).width>maxW&&part){lines.push(part);part=ch;}else part+=ch;}line=part;};String(text).split(/\s+/).filter(Boolean).forEach(push);if(line)lines.push(line);if(lines.length>maxL){lines.length=maxL;lines[maxL-1]=lines[maxL-1].slice(0,-1)+'…';}return lines;}
+function alkDraw(now){const c=cx;c.clearRect(0,0,800,800);const g=c.createLinearGradient(0,0,800,800);g.addColorStop(0,'#e6b877');g.addColorStop(.5,'#d9a45f');g.addColorStop(1,'#c78e4a');c.fillStyle=g;c.fillRect(0,0,800,800);
+ c.globalAlpha=.08;c.strokeStyle='#5a3a10';for(let i=0;i<40;i++){c.beginPath();c.moveTo(0,i*20+Math.sin(i)*6);c.bezierCurveTo(260,i*20+12,540,i*20-10,800,i*20+4);c.stroke();}c.globalAlpha=1;
+ c.strokeStyle='rgba(60,35,10,.65)';c.lineWidth=1.4;const n=15,step=(BD.x1-BD.x0)/(n-1);for(let i=0;i<n;i++){c.beginPath();c.moveTo(BD.x0+i*step,BD.y0);c.lineTo(BD.x0+i*step,BD.y1);c.stroke();c.beginPath();c.moveTo(BD.x0,BD.y0+i*step);c.lineTo(BD.x1,BD.y0+i*step);c.stroke();}
+ c.lineWidth=4;c.strokeRect(BD.x0,BD.y0,BD.x1-BD.x0,BD.y1-BD.y0);c.fillStyle='rgba(60,35,10,.7)';[[3,3],[11,3],[7,7],[3,11],[11,11]].forEach(([a,b])=>{c.beginPath();c.arc(BD.x0+a*step,BD.y0+b*step,6,0,7);c.fill();});
+ c.font='26px "Black Han Sans"';c.textAlign='center';c.fillStyle='rgba(60,35,10,.25)';c.fillText('지구 수호 알까기판',400,30);c.fillText(S.cls,400,786);
+ if(AK.aiAim){const a=AK.aiAim,s=a.a;c.save();c.setLineDash([10,8]);c.strokeStyle='rgba(134,255,79,.9)';c.lineWidth=4;const L=Math.min(1,a.t/.6)*(120+a.pw*160);c.beginPath();c.moveTo(s.x,s.y);c.lineTo(s.x+a.dx*L,s.y+a.dy*L);c.stroke();c.restore();}
+ for(const s of AK.stones){if(!s.alive)continue;const sc=s.fall?Math.max(0,1-s.fall/.6):1;c.save();c.translate(s.x,s.y);c.scale(sc,sc);c.globalAlpha=sc;
+  const my=!AK.over&&!AK.shot&&s.team===AK.turn&&humanTurn();if(my){c.shadowColor=s.team==='earth'?'#3aa0ff':'#86ff4f';c.shadowBlur=18+Math.sin(now/200)*8;}else{c.shadowColor='rgba(0,0,0,.45)';c.shadowBlur=10;c.shadowOffsetY=5;}
+  const gr=c.createRadialGradient(-12,-14,4,0,0,s.r);if(s.team==='earth'){gr.addColorStop(0,'#ffffff');gr.addColorStop(1,'#cfd8e8');}else{gr.addColorStop(0,'#4a4a5a');gr.addColorStop(1,'#0c0c14');}
+  c.fillStyle=gr;c.beginPath();c.arc(0,0,s.r,0,7);c.fill();c.shadowBlur=0;c.shadowOffsetY=0;c.lineWidth=3;c.strokeStyle=s.team==='earth'?'#3aa0ff':'#86ff4f';c.stroke();
+  c.fillStyle=s.team==='earth'?'#0d2a55':'#c8ff9a';c.font='15px "Jua"';const ls=wrapLines(c,s.label,s.r*1.65,3);ls.forEach((l,i)=>c.fillText(l,0,(i-(ls.length-1)/2)*16+5));c.restore();}
+ if(AK.drag){const s=AK.drag.s;let dx=s.x-AK.drag.x,dy=s.y-AK.drag.y;const len=Math.hypot(dx,dy);if(len>5){const pw=Math.min(len,230)/230;dx/=len;dy/=len;c.save();c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=3;c.beginPath();c.moveTo(s.x,s.y);c.lineTo(AK.drag.x,AK.drag.y);c.stroke();
+  const L=80+pw*240;const col=pw<.4?'#39ff9f':pw<.75?'#ffd54a':'#ff3b5c';c.strokeStyle=col;c.fillStyle=col;c.lineWidth=7;c.setLineDash([14,8]);c.beginPath();c.moveTo(s.x+dx*s.r,s.y+dy*s.r);c.lineTo(s.x+dx*L,s.y+dy*L);c.stroke();c.setLineDash([]);const hx=s.x+dx*L,hy=s.y+dy*L;c.beginPath();c.moveTo(hx+dx*18,hy+dy*18);c.lineTo(hx-dy*12,hy+dx*12);c.lineTo(hx+dy*12,hy-dx*12);c.fill();
+  c.font='22px "Black Han Sans"';c.fillText('힘 '+Math.round(pw*100)+'%',s.x,s.y-s.r-14);c.restore();}}
+ if(AK.over){c.fillStyle='rgba(0,0,0,.45)';c.fillRect(0,320,800,160);c.font='60px "Black Han Sans"';c.fillStyle=AK.over==='earth'?'#9fd2ff':'#c4ff9f';c.fillText(AK.over==='earth'?'🎉 지구인 승리!':'👽 외계인 승리',400,410);c.font='22px "Jua"';c.fillStyle='#fff';c.fillText(AK.over==='earth'?'우리 반 실천이 나쁜 습관을 모두 몰아냈다!':'[다시 하기]로 재도전!',400,450);}}
+
+/* ========== SIGNS ========== */
+const SW=['#ffe066','#ff8fab','#8ce99a','#74c0fc','#ffa94d','#d0bfff','#ffffff'];
+const STK=['🌍','♻️','🌱','💚','✊','🚫','🐳','🌳','⭐'];
+const SG_IDEAS=['지구는 우리가 지킨다!','섞지 말고 분리하자!','일회용품 OUT!','비우고 헹구고 분리!','외계인은 물러가라!','우리 반이 지구 지킴이','쓰레기 줄이기 우리부터','지구야 사랑해!'];
+const SGN={col:SW[0],stk:STK[0]};
+ENTER.signs=()=>{$('#sgSw').innerHTML=SW.map(c=>`<div class="sw ${c===SGN.col?'on':''}" data-c="${c}" style="background:${c}"></div>`).join('');$('#sgSt').innerHTML=STK.map(s=>`<button class="stk ${s===SGN.stk?'on':''}" data-s="${s}">${s}</button>`).join('');$('#sgIdeas').innerHTML=SG_IDEAS.map(i=>`<button>${i}</button>`).join('');
+ $$('#sgSw .sw').forEach(d=>d.onclick=()=>{SGN.col=d.dataset.c;ENTER.signs();});$$('#sgSt .stk').forEach(d=>d.onclick=()=>{SGN.stk=d.dataset.s;ENTER.signs();});$$('#sgIdeas button').forEach(b=>b.onclick=()=>{$('#sgText').value=b.textContent.slice(0,16);sgPrev();});sgPrev();renderSigns();};
+function sgPrev(){const t=$('#sgText').value.trim()||'구호를 입력하세요';$('#sgPrev').style.background=SGN.col;$('#sgPrev').innerHTML=`<div class="st">${SGN.stk}</div>${esc(t)}<div class="by">${esc($('#sgBy').value.trim())}</div>`;}
+$('#sgText').addEventListener('input',sgPrev);$('#sgBy').addEventListener('input',sgPrev);
+$('#sgAdd').onclick=()=>{const t=$('#sgText').value.trim();if(!t){toast('구호를 먼저 써 주세요!',true);return;}if(S.signs.length>=8){toast('팻말은 8개까지 만들 수 있어요!',true);return;}S.signs.push({text:t,by:$('#sgBy').value.trim(),col:SGN.col,stk:SGN.stk});SFX.ok();$('#sgText').value='';SGN.col=SW[S.signs.length%SW.length];SGN.stk=STK[S.signs.length%STK.length];ENTER.signs();};
+$('#sgFill').onclick=()=>{let i=0;while(S.signs.length<5&&i<SG_IDEAS.length){const t=SG_IDEAS[i++];if(!S.signs.some(s=>s.text===t))S.signs.push({text:t,by:'',col:SW[S.signs.length%SW.length],stk:STK[S.signs.length%STK.length]});}renderSigns();SFX.ok();};
+function renderSigns(){$('#sgGrid').innerHTML=S.signs.map((s,i)=>`<div class="mini" style="background:${s.col}"><button class="del" data-i="${i}">✕</button><div style="font-size:26px">${s.stk}</div>${esc(s.text)}${s.by?`<div style="font-family:Jua;font-size:13px;opacity:.7">${esc(s.by)}</div>`:''}</div>`).join('')||'<div style="color:#9fb6e8;font-size:18px;padding:20px">아직 팻말이 없어요. 왼쪽에서 만들어 보세요!</div>';$$('#sgGrid .del').forEach(b=>b.onclick=()=>{S.signs.splice(+b.dataset.i,1);renderSigns();});$('#sgCount').textContent=S.signs.length;$('#toProtest').disabled=S.signs.length<3;$('#toProtest').textContent=S.signs.length<3?`팻말 ${3-S.signs.length}개 더 만들어 주세요`:'📣 시위 시작! 외계인을 몰아내자';}
+$('#toProtest').onclick=()=>go('protest');
+
+/* ========== PROTEST ========== */
+const pc=$('#pgCv'),px=pc.getContext('2d');const W=1280,H=720;
+const EXCUSES=['쓰레기 좀 섞으면 어때~','라벨 떼기 귀찮아!','음식 묻어도 그냥 버려!','일회용컵 최고!','급식은 남겨야 제맛','물 틀어 놓고 양치~','깨진 유리도 유리함에!','건전지는 아무 데나~','약은 변기에 버려!','종이에 테이프 붙여도 OK','물티슈 펑펑 쓰자!','휴지 열 장씩 뽑자!'];
+const PG={};
+function pgInit(){if(S.signs.length<3){let i=0;while(S.signs.length<4){const t=SG_IDEAS[i++];if(!S.signs.some(s=>s.text===t))S.signs.push({text:t,by:'',col:SW[S.signs.length%SW.length],stk:STK[S.signs.length%STK.length]});}}
+ const signs=S.signs.slice(0,8);Object.assign(PG,{ship:{x:W/2,y:120,hp:300,max:300,t:0,hurt:0,retreat:0},minions:[],shots:[],parts:[],floats:[],morale:100,gauge:0,t:0,spawnT:1,quizT:28,running:false,paused:false,shake:0,won:false,lost:false,signs:signs.map((s,i)=>({...s,x:W*(i+.5)/signs.length,raise:0,cd:0})),crowd:Array.from({length:40},()=>({x:rnd(0,W),y:rnd(640,700),c:pick(['#2b3a67','#3d2b67','#24504a','#5a3b2b']),s:rnd(.6,.9),p:rnd(0,6)}))});}
+ENTER.protest=()=>{pgInit();buildPgCtl();pgIntro();cancelAnimationFrame(PG.raf);PG.last=performance.now();PG.raf=requestAnimationFrame(pgLoop);};
+LEAVE.protest=()=>{cancelAnimationFrame(PG.raf);PG.running=false;$$('.overlay,.bigcount').forEach(o=>o.remove());};
+function buildPgCtl(){$('#pgCtl').innerHTML=PG.signs.map((s,i)=>`<button class="sbtn" data-i="${i}" style="background:${s.col}"><span class="k">${i+1}</span>${s.stk} ${esc(s.text)}<span class="cd"></span></button>`).join('')+`<button class="btn gold sm" id="shoutBtn" disabled>📣 다 같이 외치기! (0%)</button>`;
+ $$('#pgCtl .sbtn').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();raiseSign(+b.dataset.i);}));$('#shoutBtn').onclick=()=>startShout();}
+function pgIntro(){PG.running=false;const ov=document.createElement('div');ov.className='overlay';ov.innerHTML=`<div class="panel ovBox"><div style="font-size:60px">🪧📣🛸</div><h2>지구 수호 시위 작전</h2><p>조르크의 함대가 마지막으로 공격해 온다!<br>외계인들이 <b style="color:#86ff4f">핑계</b>를 외치며 내려오면, 우리 반 <b style="color:#ffd54a">팻말 버튼</b>을 눌러 구호로 물리쳐요.<br>(키보드 숫자 1~${PG.signs.length}도 돼요. 여러 친구가 동시에 눌러도 OK!)<br>함성 게이지가 가득 차면 <b>📣 다 같이 외치기</b>! 반 친구들이 진짜로 구호를 외쳐요!<br>조르크의 반박 퀴즈를 맞히면 큰 타격!</p><button class="btn red">시위 시작! ✊</button></div>`;document.body.appendChild(ov);ov.querySelector('button').onclick=()=>{ov.remove();PG.running=true;SFX.alarm();speak('지구인들의 시위다! 그래 봤자 소용없다!',{pitch:.1,rate:.9});};}
+function raiseSign(i){if(!PG.running||PG.paused)return;const s=PG.signs[i];if(!s||s.cd>0)return;s.cd=1.1;s.raise=1;SFX.hit();
+ const tgt=PG.minions.filter(m=>m.hp>0).sort((a,b)=>b.y-a.y)[0]||null;PG.shots.push({x:s.x,y:560,tg:tgt,text:s.text,col:s.col,t:0});}
+function startShout(){if(PG.gauge<100||!PG.running||PG.paused)return;PG.paused=true;PG.gauge=0;updShout();const slogan=PG.signs[0].text;const bc=document.createElement('div');bc.className='bigcount';document.body.appendChild(bc);const seq=['3','2','1','외쳐!'];let k=0;
+ const nxt=()=>{if(k>=seq.length){bc.remove();PG.paused=false;doShout(slogan);return;}bc.innerHTML=`<span style="${k===3?'font-size:.5em':''}">${seq[k]}</span>`;k<3?tone(600,.2,'square',.12):SFX.bell();k++;setTimeout(nxt,k===4?1400:900);};
+ speak(`다 같이 외쳐요! ${slogan}`,{rate:1.05});nxt();}
+function doShout(slogan){SFX.boom();PG.shake=1;PG.floats.push({x:W/2,y:H/2,text:slogan,t:0,big:true});PG.minions.forEach(m=>{if(m.hp>0){m.hp=0;burst(m.x,m.y,'#86ff4f');}});dmgShip(30);PG.parts.push({ring:true,x:W/2,y:H,r:10,t:0});}
+function burst(x,y,col){for(let i=0;i<16;i++){const a=rnd(0,7),v=rnd(80,320);PG.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:0,col});}}
+function dmgShip(d){const sh=PG.ship;sh.hp=Math.max(0,sh.hp-d);sh.hurt=.3;if(sh.hp<=0&&!PG.won){PG.won=true;PG.running=false;sh.retreat=.001;SFX.win();speak('으아악! 물러난다! 후퇴하라!',{pitch:.1,rate:1});setTimeout(()=>{if(cur==='protest')go('ending');},3600);}}
+function updShout(){const b=$('#shoutBtn');if(!b)return;b.disabled=PG.gauge<100;b.classList.toggle('ready',PG.gauge>=100);b.textContent=PG.gauge>=100?'📣 다 같이 외치기! (준비 완료)':`📣 함성 게이지 ${Math.floor(PG.gauge)}%`;}
+function pgQuiz(){PG.paused=true;const it=pick(ITEMS);const opts=shuffle([it.bin,...shuffle(BINS.map(b=>b.id).filter(b=>b!==it.bin)).slice(0,3)]);
+ const ov=document.createElement('div');ov.className='overlay';ov.innerHTML=`<div class="panel ovBox quizBox"><div class="alienSay" style="margin:0;width:100%;text-align:left">${alienSVG()}<div><b style="color:#86ff4f">조르크의 반박!</b> 흥, 구호만 외치면 다냐? 그럼 <b>${it.n}</b>은(는) 어디에 버려야 하지? 대답 못 하면 지구는 우리 것!</div></div><div class="qi">${it.e}</div><div style="font-size:20px;color:#cfe0ff">${it.need.length?'(필요한 손질은 모두 마쳤다고 할 때)':''}</div><div class="qopts">${opts.map(o=>`<button data-b="${o}" style="background:${binCol[o]}">${BINNAME[o]}</button>`).join('')}</div></div>`;document.body.appendChild(ov);speak(`그럼 ${it.n}은 어디에 버려야 하지?`,{pitch:.1,rate:.9});
+ ov.querySelectorAll('.qopts button').forEach(b=>b.onclick=()=>{const ok=b.dataset.b===it.bin;ov.querySelectorAll('.qopts button').forEach(x=>{x.disabled=true;if(x.dataset.b===it.bin)x.style.outline='5px solid #39ff9f';});
+  if(ok){SFX.ok();toast('⭕ 정답! 조르크가 말문이 막혔다! 함선에 큰 타격!');}else{SFX.bad();toast(`❌ 틀렸어요! 정답은 ${BINNAME[it.bin]}. 조르크가 기세등등…`,true);}
+  setTimeout(()=>{ov.remove();PG.paused=false;if(ok){dmgShip(40);PG.minions.forEach(m=>m.stun=3);PG.floats.push({x:W/2,y:250,text:'으윽… 말문이 막혔다!',t:0,alien:true});}else{PG.ship.hp=Math.min(PG.ship.max,PG.ship.hp+20);PG.floats.push({x:W/2,y:250,text:'크크크! 역시 모르는군!',t:0,alien:true});}},1500);});}
+function pgLoop(now){const dt=Math.min(.05,(now-PG.last)/1000);PG.last=now;if(!PG.paused)pgUpdate(dt);pgDraw(now);PG.raf=requestAnimationFrame(pgLoop);}
+function pgUpdate(dt){const sh=PG.ship;sh.t+=dt;if(sh.hurt>0)sh.hurt-=dt;PG.shake=Math.max(0,PG.shake-dt*1.5);
+ if(sh.retreat){sh.retreat+=dt;sh.y-=dt*90*sh.retreat;sh.x+=Math.sin(sh.t*20)*3;}else sh.x=W/2+Math.sin(sh.t*.5)*260;
+ for(const s of PG.signs){s.cd=Math.max(0,s.cd-dt);s.raise=Math.max(0,s.raise-dt*2.5);}
+ $$('#pgCtl .sbtn').forEach((b,i)=>{const s=PG.signs[i];b.querySelector('.cd').style.width=(s.cd/1.1*100)+'%';});
+ for(const p of PG.parts){p.t+=dt;if(p.ring){p.r+=dt*1400;}else{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=300*dt;}}PG.parts=PG.parts.filter(p=>p.ring?p.t<1:p.t<.9);
+ for(const f of PG.floats)f.t+=dt;PG.floats=PG.floats.filter(f=>f.t<(f.big?2.2:1.6));
+ if(!PG.running)return;PG.t+=dt;
+ PG.spawnT-=dt;if(PG.spawnT<=0){const mh=PG.t>70?3:2;PG.spawnT=Math.max(.9,2.1-PG.t/70);PG.minions.push({x:sh.x+rnd(-80,80),y:sh.y+40,hp:mh,max:mh,ex:pick(EXCUSES),sp:rnd(34,48)+PG.t*.35,ph:rnd(0,6),stun:0,bx:sh.x});}
+ for(const m of PG.minions){if(m.hp<=0)continue;if(m.stun>0){m.stun-=dt;continue;}m.y+=m.sp*dt;m.ph+=dt;m.x+=Math.sin(m.ph*1.6)*40*dt;m.x=clamp(m.x,60,W-60);
+  if(m.y>540){m.hp=0;PG.morale=Math.max(0,PG.morale-12);burst(m.x,m.y,'#ff3b5c');SFX.bad();PG.shake=.6;PG.floats.push({x:m.x,y:520,text:'시위대 사기 -12',t:0,bad:true});
+   if(PG.morale<=0&&!PG.lost){PG.lost=true;PG.running=false;pgLose();}}}
+ PG.minions=PG.minions.filter(m=>m.hp>0||false);
+ for(const s of PG.shots){s.t+=dt;let tx,ty;if(s.tg&&s.tg.hp>0){tx=s.tg.x;ty=s.tg.y;}else{s.tg=null;tx=sh.x;ty=sh.y+20;}const dx=tx-s.x,dy=ty-s.y,d=Math.hypot(dx,dy),v=950*dt;if(d<v+20){s.done=true;if(s.tg){s.tg.hp--;burst(tx,ty,s.col);SFX.hit();if(s.tg.hp<=0){PG.floats.push({x:tx,y:ty,text:'으악!',t:0,alien:true});SFX.pop();}dmgShip(1);}else{dmgShip(2);burst(tx,ty,s.col);}PG.gauge=Math.min(100,PG.gauge+5);updShout();}else{s.x+=dx/d*v;s.y+=dy/d*v;}}
+ PG.shots=PG.shots.filter(s=>!s.done);
+ PG.quizT-=dt;if(PG.quizT<=0&&!PG.won){PG.quizT=30;pgQuiz();}}
+function pgLose(){SFX.lose();const ov=document.createElement('div');ov.className='overlay';ov.innerHTML=`<div class="panel ovBox"><div style="font-size:60px">😵👽</div><h2 style="color:#ff5370">시위대가 밀려났다!</h2><p>외계인의 핑계가 너무 많았어요… 하지만 포기하지 마요!<br>친구들과 힘을 합쳐 더 빠르게 팻말을 들어 봐요!</p><button class="btn red">다시 힘을 모아! ✊</button></div>`;document.body.appendChild(ov);ov.querySelector('button').onclick=()=>{ov.remove();ENTER.protest();};}
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
+function pgDraw(now){const c=px;c.save();if(PG.shake>0)c.translate(rnd(-8,8)*PG.shake,rnd(-8,8)*PG.shake);
+ const sky=c.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#05081c');sky.addColorStop(.6,'#1a1446');sky.addColorStop(1,'#3a1f4a');c.fillStyle=sky;c.fillRect(-20,-20,W+40,H+40);
+ c.fillStyle='#fff';for(let i=0;i<90;i++){c.globalAlpha=.3+.5*Math.abs(Math.sin(now/900+i));c.fillRect((i*137)%W,(i*71)%380,2,2);}c.globalAlpha=1;
+ // city/school skyline
+ c.fillStyle='#120d2a';for(let i=0;i<20;i++){const bw=60+(i*37)%50,bh=80+(i*53)%120;c.fillRect(i*68-10,600-bh,bw,bh);}c.fillStyle='#1b1438';c.fillRect(470,470,340,130);c.beginPath();c.moveTo(460,470);c.lineTo(640,420);c.lineTo(820,470);c.fill();c.fillStyle='#ffd54a';c.globalAlpha=.6;for(let r=0;r<2;r++)for(let k=0;k<6;k++)c.fillRect(492+k*52,495+r*45,26,22);c.globalAlpha=1;c.fillStyle='#ffe9a8';c.font='20px "Black Han Sans"';c.textAlign='center';c.fillText(S.cls,640,462);
+ c.fillStyle='#2a1e3e';c.fillRect(0,600,W,120);
+ // ship
+ const sh=PG.ship;c.save();c.translate(sh.x,sh.y);const ssc=sh.retreat?Math.max(.1,1-sh.retreat*.25):1;c.scale(ssc,ssc);
+ if(!sh.retreat){const bg=c.createLinearGradient(0,30,0,560);bg.addColorStop(0,'rgba(134,255,79,.25)');bg.addColorStop(1,'rgba(134,255,79,0)');c.fillStyle=bg;c.beginPath();c.moveTo(-50,30);c.lineTo(-180,480);c.lineTo(180,480);c.lineTo(50,30);c.fill();}
+ c.fillStyle=sh.hurt>0?'#ff8080':'#9fe8c8';c.beginPath();c.ellipse(0,-14,70,52,0,Math.PI,0);c.fill();c.fillStyle='#5cc84a';c.beginPath();c.ellipse(0,-22,22,26,0,0,7);c.fill();c.fillStyle='#081';c.beginPath();c.ellipse(-9,-26,7,10,.4,0,7);c.ellipse(9,-26,7,10,-.4,0,7);c.fill();
+ const hg=c.createLinearGradient(0,-10,0,40);hg.addColorStop(0,sh.hurt>0?'#ffb0b0':'#d6deee');hg.addColorStop(1,'#2d3550');c.fillStyle=hg;c.beginPath();c.ellipse(0,10,200,40,0,0,7);c.fill();for(let i=0;i<9;i++){c.fillStyle=(Math.floor(now/300)+i)%2?'#86ff4f':'#ffd54a';c.beginPath();c.arc(-160+i*40,14,7,0,7);c.fill();}c.restore();
+ // ship hp
+ if(!sh.retreat){c.fillStyle='rgba(0,0,0,.5)';rr(c,W/2-260,16,520,26,13);c.fill();c.fillStyle=sh.hp/sh.max>.3?'#86ff4f':'#ff3b5c';rr(c,W/2-256,20,512*sh.hp/sh.max,18,9);c.fill();c.fillStyle='#fff';c.font='17px "Jua"';c.fillText(`👽 조르크 함선 에너지 ${Math.ceil(sh.hp/sh.max*100)}%`,W/2,35);}
+ // minions
+ for(const m of PG.minions){if(m.hp<=0)continue;c.save();c.translate(m.x,m.y);if(m.stun>0)c.rotate(Math.sin(now/80)*.3);c.fillStyle='#8a94b0';c.beginPath();c.ellipse(0,12,34,10,0,0,7);c.fill();c.fillStyle='#74e05f';c.beginPath();c.ellipse(0,-6,20,24,0,0,7);c.fill();c.fillStyle='#0a0f0a';c.beginPath();c.ellipse(-8,-8,7,4.5,.5,0,7);c.ellipse(8,-8,7,4.5,-.5,0,7);c.fill();c.strokeStyle='#5cc84a';c.lineWidth=3;c.beginPath();c.moveTo(-8,-26);c.lineTo(-14,-38);c.moveTo(8,-26);c.lineTo(14,-38);c.stroke();
+  if(m.max>1){for(let k=0;k<m.max;k++){c.fillStyle=k<m.hp?'#ff3b5c':'#444';c.fillRect(-14+k*16,22,12,5);}}
+  c.font='17px "Jua"';const tw=c.measureText(m.ex).width+20;c.fillStyle=m.stun>0?'rgba(120,120,120,.9)':'rgba(16,58,16,.92)';rr(c,-tw/2,-74,tw,30,12);c.fill();c.strokeStyle='#86ff4f';c.lineWidth=2;c.stroke();c.fillStyle='#dfffd0';c.fillText(m.stun>0?'😵 …':m.ex,0,-53);c.restore();}
+ // crowd bg
+ for(const p of PG.crowd){const by=Math.sin(now/300+p.p)*3;c.fillStyle=p.c;c.beginPath();c.arc(p.x,p.y-30*p.s+by,12*p.s,0,7);c.fill();c.fillRect(p.x-12*p.s,p.y-18*p.s+by,24*p.s,40*p.s);}
+ // protesters
+ const skins=['#ffd7b0','#f1c27d','#e0ac69','#ffdfc4'];PG.signs.forEach((s,i)=>{const bob=Math.sin(now/250+i)*4,up=s.raise*40;const x=s.x,base=690;c.fillStyle=['#3aa0ff','#ff6b6b','#39c97a','#ffb84d','#a77bff'][i%5];rr(c,x-22,base-70,44,70,10);c.fill();c.fillStyle=skins[i%4];c.beginPath();c.arc(x,base-88,18,0,7);c.fill();c.fillStyle='#222';c.beginPath();c.arc(x,base-94,18,Math.PI,0);c.fill();
+  c.strokeStyle=skins[i%4];c.lineWidth=7;c.beginPath();c.moveTo(x-18,base-62);c.lineTo(x-6,base-120-up+bob);c.moveTo(x+18,base-62);c.lineTo(x+6,base-120-up+bob);c.stroke();
+  c.fillStyle='#8a5a26';c.fillRect(x-4,base-200-up+bob,8,100);const sw=Math.min(150,W/PG.signs.length-14),shh=78,sy=base-262-up+bob;c.save();c.translate(x,sy+shh/2);c.rotate(Math.sin(now/400+i)*.05);c.fillStyle=s.col;c.strokeStyle='#fff';c.lineWidth=4;rr(c,-sw/2,-shh/2,sw,shh,8);c.fill();c.stroke();c.fillStyle='#111';c.font='17px "Black Han Sans"';const ls=wrapLines(c,s.stk+' '+s.text,sw-14,3);ls.forEach((l,k)=>c.fillText(l,0,(k-(ls.length-1)/2)*19+6));c.restore();
+  c.fillStyle='rgba(255,255,255,.75)';c.font='14px "Jua"';c.fillText(String(i+1),x,base-10);});
+ // shots
+ for(const s of PG.shots){c.save();c.translate(s.x,s.y);c.font='20px "Black Han Sans"';const tw=c.measureText(s.text).width+16;c.shadowColor=s.col;c.shadowBlur=20;c.fillStyle=s.col;rr(c,-tw/2,-16,tw,30,14);c.fill();c.shadowBlur=0;c.fillStyle='#111';c.fillText(s.text,0,6);c.restore();}
+ for(const p of PG.parts){if(p.ring){c.strokeStyle=`rgba(255,213,74,${1-p.t})`;c.lineWidth=20*(1-p.t)+2;c.beginPath();c.arc(p.x,p.y,p.r,0,7);c.stroke();}else{c.globalAlpha=1-p.t/.9;c.fillStyle=p.col;c.fillRect(p.x-4,p.y-4,8,8);c.globalAlpha=1;}}
+ for(const f of PG.floats){c.globalAlpha=Math.max(0,1-f.t/(f.big?2.2:1.6));if(f.big){c.font=`${80+f.t*30}px "Black Han Sans"`;c.fillStyle='#ffd54a';c.strokeStyle='#5a3000';c.lineWidth=8;c.strokeText(f.text,f.x,f.y);c.fillText(f.text,f.x,f.y);}else{c.font='24px "Black Han Sans"';c.fillStyle=f.bad?'#ff5370':f.alien?'#c4ff9f':'#fff';c.fillText(f.text,f.x,f.y-f.t*40);}c.globalAlpha=1;}
+ // morale
+ c.fillStyle='rgba(0,0,0,.5)';rr(c,16,H-40,300,26,13);c.fill();c.fillStyle=PG.morale>40?'#3aa0ff':'#ff3b5c';rr(c,20,H-36,292*PG.morale/100,18,9);c.fill();c.fillStyle='#fff';c.font='16px "Jua"';c.textAlign='left';c.fillText(`✊ 시위대 사기 ${PG.morale}%`,30,H-21);
+ c.fillStyle='rgba(0,0,0,.5)';rr(c,W-316,H-40,300,26,13);c.fill();c.fillStyle='#ffd54a';rr(c,W-312,H-36,292*PG.gauge/100,18,9);c.fill();c.fillStyle='#fff';c.fillText(`📣 함성 게이지 ${Math.floor(PG.gauge)}%`,W-300,H-21);c.textAlign='center';
+ if(PG.running&&!PG.paused){c.fillStyle='rgba(255,255,255,.7)';c.font='16px "Jua"';c.fillText(`다음 반박 퀴즈까지 ${Math.ceil(PG.quizT)}초`,W/2,64);}
+ c.restore();}
+
+/* ========== ENDING ========== */
+const ENDL=['으으윽... 이럴 수가. 지구인들이 이렇게까지 지구를 아끼다니!','분리배출 4대 원칙도 알고, 우리 반 실천 약속까지 정하고... 인정하겠다. 너희는 지구를 지킬 자격이 있다.','우리는 그레이볼로 돌아가서, 너희에게 배운 방법으로 우리 행성을 직접 가꿔 보겠다.','하지만 잊지 마라! 너희가 약속을 지키지 않으면... 우리는 언제든 다시 온다! 크크크... 안녕, 지구인들!'];
+ENTER.ending=async()=>{$('#certWrap').classList.add('hide');$('#endBtns').classList.add('hide');const al=$('#endAlien');
+ for(const l of ENDL){if(cur!=='ending')return;al.classList.add('talking');speak(l,{pitch:.1,rate:.9});await typeInto($('#endTxt'),l,40);al.classList.remove('talking');await new Promise(r=>setTimeout(r,1300));}
+ if(cur!=='ending')return;SFX.win();showCert();};
+function showCert(){const d=new Date();const ds=`${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;const ex=S.exam==null?'-':S.exam+'점';const acc=S.sort?S.sort.acc+'%':'-';
+ $('#certWrap').innerHTML=`<div class="cert"><div class="no">제 ${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}호</div><h1>임 명 장</h1><div class="no">지구 수호대</div><div class="to">${esc(S.cls)} 지구인 여러분</div>
+ <p>위 지구인들은 분리배출 4대 원칙(<b>비운다 · 헹군다 · 분리한다 · 섞지 않는다</b>)을 익히고, 지구인고사와 분리배출 실전 작전을 통과하였으며, 우리 반이 실천할 약속을 스스로 정하고 힘차게 외쳐 그레이볼 외계인 함대를 지구 밖으로 몰아냈습니다. 이에 지구를 지키는 <b>지구 수호대</b>로 임명합니다.</p>
+ <div class="stats"><div>지구인고사<b>${ex}</b></div><div>분리배출 정확도<b>${acc}</b></div><div>실천 카드<b>${S.cards.length}개</b></div><div>시위 팻말<b>${S.signs.length}개</b></div></div>
+ <div style="font-family:'Black Han Sans';font-size:22px;margin-top:6px">🌍 우리 반 실천 약속</div><div class="promise">${(S.cards.length?S.cards:DEF_CARDS.slice(0,5).map(([t])=>({text:t}))).map(c=>`<span>${esc(c.text)}</span>`).join('')}</div>
+ <div class="sign"><div>${ds}<br><b style="font-family:'Black Han Sans';font-size:26px">지구 방위 본부장</b></div><div class="seal">지구<br>방위<br>본부</div></div></div>`;
+ $('#certWrap').classList.remove('hide');$('#endBtns').classList.remove('hide');speak(`${S.cls} 지구인 여러분을 지구 수호대로 임명합니다!`,{rate:1});}
+$('#replayAll').onclick=()=>{S.exam=null;S.sort=null;go('title');};
+
+/* ========== KEYS ========== */
+addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select'))return;
+ if(cur==='prologue'&&(e.code==='Space'||e.code==='Enter'||e.code==='ArrowRight')){e.preventDefault();proNext();}
+ else if(cur==='protest'){const n=parseInt(e.key,10);if(n>=1&&n<=9){raiseSign(n-1);}if(e.code==='Space'){e.preventDefault();startShout();}}
+ else if(cur==='sort'){const n=parseInt(e.key,10);if(n>=1&&n<=9&&SG.cur&&!SG.paused){dropTo(BINS[n-1].id);}const tk={q:'empty',w:'rinse',e:'peel',r:'crush',t:'wrap'}[e.key];if(tk)useTool(tk);}
+ else if(cur==='study'&&e.code==='Space'){e.preventDefault();$('#vPlay').click();}});
+document.fonts&&document.fonts.ready.then(()=>{});
+</script>
+</body>
+</html>
